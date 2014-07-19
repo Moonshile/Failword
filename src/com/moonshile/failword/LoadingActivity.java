@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.moonshile.helper.PRNGFixes;
+
 public class LoadingActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
+		// fix bugs of PRNG while using AES
+		PRNGFixes.apply();
 	}
 
 	@Override
