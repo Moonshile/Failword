@@ -10,6 +10,7 @@ package com.moonshile.storage;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +44,11 @@ public class Record {
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws NoSuchProviderException 
 	 */
 	public Record(String tag, String username, String password, String remarks, byte[] key) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
-			IllegalBlockSizeException, BadPaddingException{
+			IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_id = -1;
 		_tag = AESHelper.encrypt(tag, key);
 		_username = AESHelper.encrypt(username, key);
@@ -111,26 +113,29 @@ public class Record {
 	
 	/**
 	 * Fetch all records
-	 * @count -1 for all records
+	 * @param count -1 for all records
 	 * @throws IllegalArgumentException 
 	 * @throws BadPaddingException 
 	 * @throws IllegalBlockSizeException 
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws NoSuchProviderException 
 	 */
 	public static List<Record> fetchAllRecords(Context context, int startIndex, int count, byte[] key) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
-			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException{
+			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException, NoSuchProviderException{
 		SQLiteDatabase db = SQLiteFactory.getInstance(context).getReadableDatabase();
 		String orderBy = Contract.RecordSchema.COLUMN_NAME_TAG + "," + Contract.RecordSchema.COLUMN_NAME_USERNAME + " ASC";
 		Cursor c = db.query(Contract.RecordSchema.TABLE_NAME, getProjection(), null, null, null, null, orderBy);
+		List<Record> res = toList(c, startIndex, count, key);
 		db.close();
-		return toList(c, startIndex, count, key);
+		return res;
 	}
 	
 	/**
 	 * Fetch the records has the specific tag
+	 * @param tag is not encrypted
 	 * @count -1 for all records
 	 * @throws IllegalArgumentException 
 	 * @throws BadPaddingException 
@@ -138,17 +143,19 @@ public class Record {
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws NoSuchProviderException 
 	 */
 	public static List<Record> fetchByTag(Context context, int startIndex, int count, byte[] key, String tag) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
-			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException{
+			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException, NoSuchProviderException{
 		SQLiteDatabase db = SQLiteFactory.getInstance(context).getReadableDatabase();
 		String orderBy = Contract.RecordSchema.COLUMN_NAME_USERNAME + " ASC";
 		String selection = Contract.RecordSchema.COLUMN_NAME_TAG + "= ?";
-		String[] selectionArgs = { tag };
+		String[] selectionArgs = { AESHelper.encrypt(tag, key) };
 		Cursor c = db.query(Contract.RecordSchema.TABLE_NAME, getProjection(), selection, selectionArgs, null, null, orderBy);
+		List<Record> res = toList(c, startIndex, count, key);
 		db.close();
-		return toList(c, startIndex, count, key);
+		return res;
 	}
 	
 	/**
@@ -159,19 +166,20 @@ public class Record {
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws NoSuchProviderException 
 	 */
 	public static Record fetchByID(Context context, byte[] key, long id) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
-			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException{
+			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException, NoSuchProviderException{
 		SQLiteDatabase db = SQLiteFactory.getInstance(context).getReadableDatabase();
 		String selection = Contract.RecordSchema._ID + "= ?";
 		String[] selectionArgs = { id + "" };
 		Cursor c = db.query(Contract.RecordSchema.TABLE_NAME, getProjection(), selection, selectionArgs, null, null, null);
 		List<Record> ls = toList(c, 0, -1, key);
+		db.close();
 		if(ls.size() == 1){
 			return ls.get(0);
 		}
-		db.close();
 		return null;
 	}
 	
@@ -188,19 +196,19 @@ public class Record {
 	
 	private static List<Record> toList(Cursor c, int startIndex, int count, byte[] key) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
-			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException{
+			IllegalBlockSizeException, BadPaddingException, IllegalArgumentException, NoSuchProviderException{
 		if(count < 0){
 			count = c.getCount();
 		}
 		List<Record> res = new ArrayList<Record>();
-		if(c.getCount() >= startIndex){
+		if(c.getCount() > startIndex){
 			c.moveToPosition(startIndex);
 			for (int i = 0; i < count; i++) {
 				Record r = new Record(
-						c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_TAG)),
-						c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_USERNAME)),
-						c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_PASSWORD)),
-						c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_REMARKS)),
+						AESHelper.decrypt(c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_TAG)), key),
+						AESHelper.decrypt(c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_USERNAME)), key),
+						AESHelper.decrypt(c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_PASSWORD)), key),
+						AESHelper.decrypt(c.getString(c.getColumnIndexOrThrow(Contract.RecordSchema.COLUMN_NAME_REMARKS)), key),
 						key);
 				r.setID(c.getLong(c.getColumnIndexOrThrow(Contract.RecordSchema._ID)));
 				res.add(r);
@@ -221,35 +229,38 @@ public class Record {
 	private String _password;
 	private String _remarks;
 	
+	public long getID(){
+		return _id;
+	}
 	public void setID(long id){
 		_id = id;
 	}
 	
-	public String getTag(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public String getTag(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_tag, key);
 	}
-	public void setTag(String tag, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public void setTag(String tag, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_tag = AESHelper.encrypt(tag, key);
 	}
 	
-	public String getUsername(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public String getUsername(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_username, key);
 	}
-	public void setUsername(String username, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public void setUsername(String username, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_username = AESHelper.encrypt(username, key);
 	}
 	
-	public String getPassword(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public String getPassword(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_password, key);
 	}
-	public void setPassword(String password, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public void setPassword(String password, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_password = AESHelper.encrypt(password, key);
 	}
 	
-	public String getRemarks(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public String getRemarks(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_remarks, key);
 	}
-	public void setRemarks(String remarks, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException{
+	public void setRemarks(String remarks, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_remarks = AESHelper.encrypt(remarks, key);
 	}
 }
