@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="loading_tips">
+        <item>Set global key for pwd-protection. Never forget it!</item>
+        <item>Failword will never access Internet.</item>
+        <item>All your inputs are encrypted, with AES-256.</item>
+    </string-array>
+</resources>
