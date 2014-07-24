@@ -17,8 +17,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,13 +48,6 @@ public class LoadingActivity extends ActionBarActivity {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.loading, menu);
-		return true;
-	}
-	
-	@Override
 	public void onResume(){
 		super.onResume();
 		// reset performance
@@ -77,18 +68,6 @@ public class LoadingActivity extends ActionBarActivity {
 		}
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
 	public void onLogin(View view){
 		Button button = ((Button)view);
 		button.setText(R.string.loading_logining);
@@ -103,7 +82,7 @@ public class LoadingActivity extends ActionBarActivity {
 			private void wrongKey(){
 				((EditText)findViewById(R.id.loading_password)).setText("");
 				TextView tips = (TextView)findViewById(R.id.loading_tips);
-				tips.setTextColor(getResources().getColor(R.color.red));
+				tips.setTextColor(getResources().getColor(R.color.light_red));
 				tips.setText(R.string.loading_wrong_key_tip);
 
 				Button button = ((Button)findViewById(R.id.loading_login));
@@ -114,7 +93,7 @@ public class LoadingActivity extends ActionBarActivity {
 			
 			private void exception(){
 				TextView tips = (TextView)findViewById(R.id.loading_tips);
-				tips.setTextColor(getResources().getColor(R.color.red));
+				tips.setTextColor(getResources().getColor(R.color.light_red));
 				tips.setText(R.string.loading_exception_tip);
 			}
 
