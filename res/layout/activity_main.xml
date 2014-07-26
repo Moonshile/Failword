@@ -14,6 +14,7 @@
         android:id="@+id/main_search_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
         android:hint="@string/main_search_hint"
         android:dropDownHorizontalOffset="@dimen/view_horizontal_margin"
         android:paddingRight="@dimen/view_horizontal_margin"
