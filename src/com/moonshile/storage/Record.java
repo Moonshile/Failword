@@ -8,6 +8,7 @@
  */
 package com.moonshile.storage;
 
+import java.io.Serializable;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -31,11 +32,15 @@ import com.moonshile.helper.SQLiteFactory;
  * @author duankq
  *
  */
-public class Record {
+public class Record implements Serializable {
 	
 
 	/********************************** Constructor ********************************************/
 
+	private static final long serialVersionUID = 5661856778526643899L;
+
+	public static final int NOT_ADDED = -1;
+	
 	/**
 	 * constructor
 	 * @param key digest of the key given
@@ -49,7 +54,7 @@ public class Record {
 	public Record(String tag, String username, String password, String remarks, byte[] key) 
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
 			IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
-		_id = -1;
+		_id = NOT_ADDED;
 		_tag = AESHelper.encrypt(tag, key);
 		_username = AESHelper.encrypt(username, key);
 		_password = AESHelper.encrypt(password, key);
