@@ -24,11 +24,17 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/main_activity_title" >
+            android:label="@string/main_activity_title"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
         <activity
             android:name=".EditActivity"
             android:label="@string/edit_activity_title" >
+        </activity>
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/detail_activity_title"
+            android:theme="@android:style/Theme.Translucent" >
         </activity>
     </application>
 
