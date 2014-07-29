@@ -13,6 +13,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import com.moonshile.helper.AppIcon;
+import com.moonshile.helper.MoonshileSort;
 import com.moonshile.helper.Resource;
 import com.moonshile.storage.Record;
 
@@ -22,6 +23,9 @@ import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -32,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 	private byte[] key;
 	private List<Map<String, Object>> recordMapList;
 	private SimpleAdapter adapter;
+	private final MainActivity context = this;
 
 	private static final String RECORD_ID = "RECORD_ID";
 	private static final String RECORD_TAG = "RECORD_TAG";
@@ -42,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
 	public static final String INTENT_KEY = "INTENT_KEY";
 	
 	public static final int REQUEST_CODE_EDIT = 0;
+	public static final int REQUEST_CODE_DETAIL = 1;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
 		key = intent.getByteArrayExtra(LoadingActivity.INTENT_KEY);
 		recordMapList = new ArrayList<Map<String, Object>>();
 
+		sortRecords();
 		for(Record r: records){
 			recordMapList.add(convertRecordsToAdapter(r));
 		}
@@ -62,7 +69,21 @@ public class MainActivity extends ActionBarActivity {
 				new String[] {RECORD_TAG, RECORD_USERNAME, RECORD_ICON},
 				new int[] {R.id.grid_item_tag, R.id.grid_item_username, R.id.grid_item_image});
 		
-		((GridView)findViewById(R.id.main_grid_records)).setAdapter(adapter);
+		GridView gridView = ((GridView)findViewById(R.id.main_grid_records));
+		gridView.setAdapter(adapter);
+		
+		gridView.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(context, DetailActivity.class);
+				intent.putExtra(INTENT_KEY, key);
+				intent.putExtra(MainActivity.INTENT_RECORD_EDITED, records.get(position));
+				context.startActivityForResult(intent, MainActivity.REQUEST_CODE_DETAIL);
+			}
+			
+		});
 	}
 
 	@Override
@@ -92,19 +113,35 @@ public class MainActivity extends ActionBarActivity {
 		case REQUEST_CODE_EDIT:
 			switch(resultCode){
 			case EditActivity.RESULT_OK:
-				Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
-				insertIntoRecords(record);
-				adapter.notifyDataSetChanged();
-				Toast.makeText(this, R.string.main_edit_ok, Toast.LENGTH_SHORT).show();
+				if(intent == null){
+					// intent is null, so operation is canceled.
+					Toast.makeText(this, R.string.cancel_hint, Toast.LENGTH_SHORT).show();
+				}else{
+					Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
+					if(!existsAndUpdateRecords(record)){
+						insertIntoRecords(record);
+					}
+					// update gridview
+					adapter.notifyDataSetChanged();
+					Toast.makeText(this, R.string.main_edit_ok, Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case EditActivity.RESULT_ERROR:
 				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
+				break;
+			case EditActivity.RESULT_CANCEL:
+				Toast.makeText(this, R.string.cancel_hint, Toast.LENGTH_SHORT).show();
 				break;
 			}
 			break;
 		}
 	}
 	
+	
+	
+	/**
+	 * convert a record to map object
+	 */
 	private Map<String, Object> convertRecordsToAdapter(Record r){
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(RECORD_ID, r.getID());
@@ -124,44 +161,94 @@ public class MainActivity extends ActionBarActivity {
 		return map;
 	}
 	
+	private boolean existsAndUpdateRecords(Record r){
+		for(int i = 0; i < records.size(); i++){
+			Record record = records.get(i);
+			if(r.getID() == record.getID()){
+				records.set(i, r);
+				recordMapList.set(i, this.convertRecordsToAdapter(r));
+				sortRecords();
+				sortRecordMapList();
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * insert a record into both records-list and map-list (after convertion)
 	 */
 	private void insertIntoRecords(Record r){
-		int index = -1;
-		for(int i = 0; i < records.size(); i++){
-			Record record = records.get(i);
-			try {
-				if(r.getTag(key).compareTo(record.getTag(key)) < 0){
-					index = i;
-					break;
-				}else if(r.getTag(key).compareTo(record.getTag(key)) == 0){
-					if(r.getUsername(key).compareTo(record.getUsername(key)) <= 0){
-						index = i;
-						break;
-					}
-				}
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-					| NoSuchPaddingException | IllegalBlockSizeException
-					| BadPaddingException | NoSuchProviderException e) {
-				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-			}
-		}
 		records.add(r);
 		recordMapList.add(this.convertRecordsToAdapter(r));
-		if(index > -1){
-			for(int i = records.size() - 1; i > index; i--){
-				Record t = records.get(i);
-				records.set(i, records.get(i - 1));
-				records.set(i - 1, t);
-				Map<String, Object> mt = recordMapList.get(i);
-				recordMapList.set(i, recordMapList.get(i - 1));
-				recordMapList.set(i - 1,  mt);
-			}
-		}
+		sortRecords();
+		sortRecordMapList();
 	}
 	
-	
+	private void sortRecords(){
+		MoonshileSort.mergeSort(new MoonshileSort.MoonshileList<List<Record>, Record>(){
 
+			@Override
+			public Record get(List<Record> list, int i) {
+				return list.get(i);
+			}
+
+			@Override
+			public void set(List<Record> list, Record f, int i) {
+				list.set(i, f);
+			}
+			
+		}, records, 0, records.size() - 1, new MoonshileSort.Compare<Record>(){
+
+			@Override
+			public int cmp(Record f1, Record f2) {
+				int res;
+				try {
+					res = f1.getTag(key).compareTo(f2.getTag(key));
+					if(res != 0){
+						return res;
+					}else{
+						return f1.getUsername(key).compareTo(f2.getUsername(key));
+					}
+				} catch (InvalidKeyException | NoSuchAlgorithmException
+						| NoSuchPaddingException | IllegalBlockSizeException
+						| BadPaddingException | NoSuchProviderException e) {
+					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+					context.finish();
+				}
+				return -1;
+			}
+			
+		});
+	}
+
+	
+	private void sortRecordMapList(){
+		MoonshileSort.mergeSort(new MoonshileSort.MoonshileList<List<Map<String, Object>>, Map<String, Object>>() {
+
+			@Override
+			public Map<String, Object> get(List<Map<String, Object>> list, int i) {
+				return list.get(i);
+			}
+
+			@Override
+			public void set(List<Map<String, Object>> list,
+					Map<String, Object> f, int i) {
+				list.set(i, f);
+			}
+		}, recordMapList, 0, recordMapList.size() - 1, new MoonshileSort.Compare<Map<String, Object>>() {
+
+			@Override
+			public int cmp(Map<String, Object> f1, Map<String, Object> f2) {
+				int res;
+				res = ((String)f1.get(RECORD_TAG)).compareTo((String)f2.get(RECORD_TAG));
+				if(res != 0){
+					return res;
+				}else{
+					return ((String)f1.get(RECORD_USERNAME)).compareTo((String)f2.get(RECORD_USERNAME));
+				}
+			}
+		});
+	}
 }

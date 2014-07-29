@@ -24,6 +24,7 @@ public class EditActivity extends Activity {
 	
 	public static final int RESULT_OK = 0;
 	public static final int RESULT_ERROR = 1;
+	public static final int RESULT_CANCEL = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,12 @@ public class EditActivity extends Activity {
 			this.setResult(RESULT_ERROR, res);
 			this.finish();
 		}
+	}
+	
+	public void onCancel(View view){
+		Intent res = new Intent(this, MainActivity.class);
+		this.setResult(RESULT_CANCEL, res);
+		this.finish();
 	}
 	
 	public void onSave(View view){

@@ -2,12 +2,18 @@
 <resources>
     
     <color name="light_blue">#88bbff</color>
+    <color name="xlight_blue">#aaddff</color>
     <color name="light_green">#66dd66</color>
     <color name="purple">#9933cc</color>
     <color name="purple_shadow">#ffcc66</color>
+    <color name="xdark_gray">#333333</color>
+    <color name="xdark_gray_opacity">#88333333</color>
     <color name="dark_gray">#555555</color>
     <color name="gray">#888888</color>
     <color name="light_gray">#aaaaaa</color>
+    <color name="xlight_gray">#cccccc</color>
+    <color name="xxlight_gray">#eeeeee</color>
+    <color name="light_gray_opacity">#88aaaaaa</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="light_red">#ff5555</color>

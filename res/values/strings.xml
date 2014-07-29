@@ -3,6 +3,7 @@
 
     <string name="app_name">Failword</string>
     <string name="error_hint">Error occurred!</string>
+    <string name="cancel_hint">Operation Canceled!</string>
     <string name="loading_text">Failword</string>
     <string name="loading_login">Sign in</string>
     <string name="loading_logining">Signing&#8230;</string>
@@ -14,16 +15,19 @@
     <string name="main_action_add_record">Add Record</string>
     <string name="main_action_about">About</string>
     <string name="main_edit_ok">Record already saved</string>
-    
     <string name="grid_item_image_desc">logo of app</string>
-    
     <string name="edit_activity_title">Edit Record</string>
     <string name="edit_tag_hint">Tag, such as Google</string>
     <string name="edit_username_hint">Username, such as abc@gmail.com</string>
     <string name="edit_password_hint">Password, such as abc123</string>
     <string name="edit_remarks_hint">Remarks, other info you need</string>
     <string name="edit_save">Save</string>
+    <string name="edit_cancel">Cancel</string>
     <string name="edit_saving">Saving&#8230;</string>
-    
+    <string name="detail_activity_title">Detail</string>
+    <string name="detail_tag_text">Tag:</string>
+    <string name="detail_username_text">Username:</string>
+    <string name="detail_password_text">Password:</string>
+    <string name="detail_remarks_text">Remarks:</string>
 
 </resources>

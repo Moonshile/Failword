@@ -64,4 +64,16 @@
         android:textColor="@color/dark_gray"
         android:onClick="onSave" />
     
+    <Button 
+        android:id="@+id/record_edit_button_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:paddingTop="@dimen/view_horizontal_margin"
+        android:paddingBottom="@dimen/view_horizontal_margin"
+        android:background="@drawable/button_shape_cancel"
+        android:text="@string/edit_cancel"
+        android:textColor="@color/dark_gray"
+        android:onClick="onCancel" />
+    
 </LinearLayout>
