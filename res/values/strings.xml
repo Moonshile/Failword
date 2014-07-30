@@ -29,5 +29,9 @@
     <string name="detail_username_text">Username:</string>
     <string name="detail_password_text">Password:</string>
     <string name="detail_remarks_text">Remarks:</string>
+    <string name="detail_btn_back">Back</string>
+    <string name="detail_btn_edit">Edit</string>
+    <string name="detail_btn_delete">Del</string>
+    <string name="detail_delete_warning">Long click to delete!</string>
 
 </resources>

@@ -4,6 +4,7 @@
     <color name="light_blue">#88bbff</color>
     <color name="xlight_blue">#aaddff</color>
     <color name="light_green">#66dd66</color>
+    <color name="dark_green">#338833</color>
     <color name="purple">#9933cc</color>
     <color name="purple_shadow">#ffcc66</color>
     <color name="xdark_gray">#333333</color>
@@ -17,5 +18,6 @@
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="light_red">#ff5555</color>
+    <color name="dark_red">#883333</color>
     
 </resources>

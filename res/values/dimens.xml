@@ -9,7 +9,11 @@
     <dimen name="xxsmall_margin">4dp</dimen>
     <dimen name="view_horizontal_margin">12dp</dimen>
     <dimen name="view_vertical_padding">2dp</dimen>
+    <dimen name="small_view_padding">2dp</dimen>
+    <dimen name="view_padding">6dp</dimen>
+    <dimen name="small_view_stroke">1dp</dimen>
     <dimen name="button_radius">5dp</dimen>
+    <dimen name="small_button_radius">3dp</dimen>
     <dimen name="bar_width">6px</dimen>
     <dimen name="bar_height">24px</dimen>
     

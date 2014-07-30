@@ -129,8 +129,43 @@ public class MainActivity extends ActionBarActivity {
 			case EditActivity.RESULT_ERROR:
 				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
 				break;
-			case EditActivity.RESULT_CANCEL:
+			case EditActivity.RESULT_CANCELED:
 				Toast.makeText(this, R.string.cancel_hint, Toast.LENGTH_SHORT).show();
+				break;
+			}
+			break;
+		case REQUEST_CODE_DETAIL:
+			switch(resultCode){
+			case DetailActivity.RESULT_OK:
+				if(intent != null){
+					Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
+					if(!existsAndUpdateRecords(record)){
+						insertIntoRecords(record);
+					}
+					// update gridview
+					adapter.notifyDataSetChanged();
+				}
+				break;
+			case DetailActivity.RESULT_ERROR:
+				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
+				break;
+			case DetailActivity.RESULT_CANCELED:
+				break;
+			case DetailActivity.RESULT_DELETED:
+				if(intent != null){
+					Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
+					int index = -1;
+					for(int i = 0; i < records.size(); i++){
+						if(records.get(i).getID() == record.getID()){
+							index = i;
+						}
+					}
+					if(index >= 0){
+						records.remove(index);
+						recordMapList.remove(index);
+					}
+					adapter.notifyDataSetChanged();
+				}
 				break;
 			}
 			break;
