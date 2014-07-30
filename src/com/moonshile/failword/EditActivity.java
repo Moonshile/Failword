@@ -10,10 +10,12 @@ import javax.crypto.NoSuchPaddingException;
 
 import com.moonshile.storage.Record;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,14 +24,15 @@ public class EditActivity extends Activity {
 	private Record record;
 	private byte[] key;
 	
-	public static final int RESULT_OK = 0;
 	public static final int RESULT_ERROR = 1;
-	public static final int RESULT_CANCEL = 2;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		Intent intent = getIntent();
 		record = (Record)intent.getSerializableExtra(MainActivity.INTENT_RECORD_EDITED);
@@ -47,15 +50,23 @@ public class EditActivity extends Activity {
 				| NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException | NoSuchProviderException e) {
 			e.printStackTrace();
-			Intent res = new Intent(this, MainActivity.class);
+			Intent res = getIntent();
 			this.setResult(RESULT_ERROR, res);
 			this.finish();
 		}
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		if(item.getItemId() == android.R.id.home){
+			onCancel(null);
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
 	public void onCancel(View view){
-		Intent res = new Intent(this, MainActivity.class);
-		this.setResult(RESULT_CANCEL, res);
+		Intent res = getIntent();
+		this.setResult(RESULT_CANCELED, res);
 		this.finish();
 	}
 	
@@ -73,7 +84,7 @@ public class EditActivity extends Activity {
 				| NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException | NoSuchProviderException e) {
 			e.printStackTrace();
-			Intent res = new Intent(this, MainActivity.class);
+			Intent res = getIntent();
 			this.setResult(RESULT_ERROR, res);
 			this.finish();
 		}
@@ -88,7 +99,7 @@ public class EditActivity extends Activity {
 				}else{
 					record.update(context);
 				}
-				Intent res = new Intent(context, MainActivity.class);
+				Intent res = context.getIntent();
 				res.putExtra(MainActivity.INTENT_RECORD_EDITED, record);
 				context.setResult(RESULT_OK, res);
 				context.finish();
