@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="loading_tips">
+        <item>密钥是用来保护你的密码的，一定不要忘记！</item>
+        <item>Failword永远不会访问网络。</item>
+        <item>你所有的信息都用AES-256加密。</item>
+    </string-array>
+</resources>

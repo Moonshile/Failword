@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Failword</string>
+    <string name="error_hint">发生了错误！</string>
+    <string name="cancel_hint">操作已取消！</string>
+    <string name="loading_text">Failword</string>
+    <string name="loading_login">进入</string>
+    <string name="loading_logining">正在进入&#8230;</string>
+    <string name="loading_hint">密钥</string>
+    <string name="loading_wrong_key_tip">错误的密钥！</string>
+    <string name="loading_exception_tip">发生异常了！请尝试重启应用&#8230;</string>
+    <string name="main_activity_title">Failword</string>
+    <string name="main_search_hint">根据标签搜索</string>
+    <string name="main_action_add_record">添加</string>
+    <string name="main_action_about">关于</string>
+    <string name="main_edit_ok">已保存</string>
+    <string name="grid_item_image_desc">图标</string>
+    <string name="edit_activity_title">编辑</string>
+    <string name="edit_tag_hint">标签，如QQ</string>
+    <string name="edit_username_hint">用户名，如123456</string>
+    <string name="edit_password_hint">密码，如abc123</string>
+    <string name="edit_remarks_hint">备注，你需要记住的其他信息</string>
+    <string name="edit_save">保存</string>
+    <string name="edit_cancel">取消</string>
+    <string name="edit_saving">正在保存&#8230;</string>
+    <string name="detail_activity_title">详情</string>
+    <string name="detail_tag_text">标签：</string>
+    <string name="detail_username_text">用户名：</string>
+    <string name="detail_password_text">密码：</string>
+    <string name="detail_remarks_text">备注：</string>
+    <string name="detail_btn_back">返回</string>
+    <string name="detail_btn_edit">编辑</string>
+    <string name="detail_btn_delete">删除</string>
+    <string name="detail_delete_warning">长按才可以删除哦~</string>
+
+</resources>
