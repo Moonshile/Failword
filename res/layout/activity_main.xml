@@ -17,6 +17,7 @@
         android:singleLine="true"
         android:hint="@string/main_search_hint"
         android:dropDownHorizontalOffset="@dimen/view_horizontal_margin"
+        android:popupBackground="@color/xlight_blue"
         android:paddingRight="@dimen/view_horizontal_margin"
         android:completionThreshold="1"
         android:drawableLeft="@drawable/search2"
