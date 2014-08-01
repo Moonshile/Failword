@@ -24,18 +24,13 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.view.View.OnHoverListener;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.GridView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
@@ -106,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
 				String tag = ((AutoCompleteTextView)view).getText().toString();
-				if(tag.equals("")){
+				if(keyCode == KeyEvent.KEYCODE_DEL && tag.equals("")){
 					adapter = adapterHelper.getAdapter(null, key);
 					((GridView)findViewById(R.id.main_grid_records)).setAdapter(adapter);
 					return true;
