@@ -18,5 +18,7 @@
     <dimen name="bar_height">24px</dimen>
     
     <dimen name="loading_text_size">32dp</dimen>
+    <dimen name="main_grid_width">50dp</dimen>
+    <dimen name="main_grid_height">50dp</dimen>
 
 </resources>

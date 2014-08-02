@@ -64,8 +64,6 @@ public class MainActivity extends ActionBarActivity {
 		Intent intent = getIntent();
 		key = intent.getByteArrayExtra(LoadingActivity.INTENT_KEY);
 		adapterHelper = new MainGridAdapterHelper((List<Record>)intent.getSerializableExtra(LoadingActivity.INTENT_RECORDS), this);
-		
-		
 		adapter = adapterHelper.getAdapter(null, key);
 		GridView gridView = ((GridView)findViewById(R.id.main_grid_records));
 		gridView.setAdapter(adapter);
