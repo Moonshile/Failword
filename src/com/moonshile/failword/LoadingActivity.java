@@ -10,7 +10,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,7 +26,7 @@ import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.PRNGFixes;
 import com.moonshile.storage.Record;
 
-public class LoadingActivity extends ActionBarActivity {
+public class LoadingActivity extends Activity {
 	
 	private static final int INIT_RECORDS_COUNT = 28;
 	private SharedPreferences sharedPref;

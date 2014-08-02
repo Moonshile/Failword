@@ -17,7 +17,7 @@ import com.moonshile.helper.MoonshileSort;
 import com.moonshile.helper.Resource;
 import com.moonshile.storage.Record;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
@@ -35,7 +35,7 @@ import android.widget.Toast;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 	
 	private byte[] key;
 	private MainGridAdapterHelper adapterHelper; 
