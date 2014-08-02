@@ -39,6 +39,14 @@ public class AppIcon {
 		return path + "app_icon_default";
 	}
 	
+	public static String getStandardName(String name){
+		String iconName = getIconName(name);
+		if(iconName.equals("app_icon_default")){
+			return name;
+		}
+		return iconName;
+	}
+	
 	/********************************** Fields ********************************************/
 	
 	public static final String path = "";
@@ -58,7 +66,8 @@ public class AppIcon {
 			new String[]{"baidu", "百度"},
 			new String[]{"google", "谷歌", "gmail", "g+"},
 			new String[]{"qq", "q", "tx", "腾讯", "企鹅"},
-			new String[]{"taobao", "淘宝", "阿里巴巴", "支付宝"},
+			new String[]{"taobao", "淘宝", "阿里巴巴", "tmall", "tianmao", "天猫"},
+			new String[]{"zhifubao", "支付宝"},
 			new String[]{"jd", "京东"},
 			new String[]{"meituan", "美团"},
 			new String[]{"yhd", "1hd", "1号店", "一号店"},

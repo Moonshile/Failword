@@ -233,7 +233,7 @@ public class MainActivity extends ActionBarActivity {
 			if(tag != null){
 				for(Record r: records_base){
 					try {
-						if(r.getTag(key).equals(tag)){
+						if(AppIcon.getStandardName(r.getTag(key)).equals(AppIcon.getStandardName(tag))){
 							records.add(r);
 						}
 					} catch (InvalidKeyException | NoSuchAlgorithmException
@@ -370,7 +370,7 @@ public class MainActivity extends ActionBarActivity {
 				public int cmp(Record f1, Record f2) {
 					int res;
 					try {
-						res = f1.getTag(key).compareTo(f2.getTag(key));
+						res = AppIcon.getStandardName(f1.getTag(key)).compareTo(AppIcon.getStandardName(f2.getTag(key)));
 						if(res != 0){
 							return res;
 						}else{
@@ -408,7 +408,7 @@ public class MainActivity extends ActionBarActivity {
 				@Override
 				public int cmp(Map<String, Object> f1, Map<String, Object> f2) {
 					int res;
-					res = ((String)f1.get(RECORD_TAG)).compareTo((String)f2.get(RECORD_TAG));
+					res = AppIcon.getStandardName((String)f1.get(RECORD_TAG)).compareTo(AppIcon.getStandardName((String)f2.get(RECORD_TAG)));
 					if(res != 0){
 						return res;
 					}else{

@@ -29,7 +29,7 @@ public class MoonshileSort {
 	 * @param cmp the compare method
 	 */
 	public static <T, F> void mergeSort(MoonshileList<T, F> listMethod, T list, int start, int end, Compare<F> cmp){
-		if(start == end){
+		if(start >= end){
 			return;
 		}
 		int middle = (start + end)/2;
