@@ -12,6 +12,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+
 import com.moonshile.helper.AppIcon;
 import com.moonshile.helper.MoonshileSort;
 import com.moonshile.helper.Resource;
@@ -21,6 +22,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -116,35 +118,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		switch(id){
-		case R.id.main_action_add_record:
-			Intent intent = new Intent(this, EditActivity.class);
-			intent.putExtra(INTENT_KEY, key);
-			this.startActivityForResult(intent, REQUEST_CODE_EDIT);
-			break;
-		case R.id.main_action_export:
-			try {
-				String path = Record.export(adapterHelper.getRecordsBase());
-				Toast.makeText(this, getResources().getString(R.string.main_export_ok) + path, Toast.LENGTH_SHORT).show();
-			} catch (Exception e) {
-				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-				Log.e("export", e.toString());
-			}
-			break;
-		case R.id.main_action_import:
-			break;
-		case R.id.main_action_merge:
-			break;
-		case R.id.main_action_about:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent){
@@ -201,6 +174,97 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch(id){
+		case R.id.main_action_add_record:
+			Intent intent = new Intent(this, EditActivity.class);
+			intent.putExtra(INTENT_KEY, key);
+			this.startActivityForResult(intent, REQUEST_CODE_EDIT);
+			break;
+		case R.id.main_action_export:
+			onExport();
+			break;
+		case R.id.main_action_import:
+			onImport();
+			break;
+		case R.id.main_action_merge:
+			onMerge();
+			break;
+		case R.id.main_action_about:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void onExport(){
+		Handler handler = new Handler();
+		handler.post(new Runnable(){
+
+			@Override
+			public void run() {
+				try {
+					String path = Record.exportRecords(adapterHelper.getRecordsBase());
+					Toast.makeText(context, getResources().getString(R.string.main_export_ok) + path, Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+					Log.e("export", e.toString());
+				}
+			}
+			
+		});
+	}
+	
+	private void onImport(){
+		Handler handler = new Handler();
+		handler.post(new Runnable(){
+
+			@Override
+			public void run() {
+				try {
+					List<Record> importedRecords = Record.importRecords();
+					for(Record r: importedRecords){
+						r.add(context);
+						adapterHelper.insertOrUpdate(r);
+					}
+					List<Record> toRm = Record.mergeRecords(adapterHelper.getRecordsBase(), context);
+					for(Record r: toRm){
+						adapterHelper.delete(r);
+					}
+					if(toRm.size() > 0){
+						Toast.makeText(context, R.string.main_merged, Toast.LENGTH_SHORT).show();
+					}
+					adapter.notifyDataSetChanged();
+					updateTags();
+				} catch (Exception e) {
+					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+					Log.e("export", e.toString());
+				}
+			}
+			
+		});
+	}
+	
+	private void onMerge(){
+		Handler handler = new Handler();
+		handler.post(new Runnable(){
+
+			@Override
+			public void run() {
+				List<Record> toRm = Record.mergeRecords(adapterHelper.getRecordsBase(), context);
+				for(Record r: toRm){
+					adapterHelper.delete(r);
+				}
+				adapter.notifyDataSetChanged();
+				updateTags();
+			}
+			
+		});
+	}
 	
 	private void updateTags(){
 		tags.removeAll(tags);

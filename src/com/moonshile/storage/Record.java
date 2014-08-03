@@ -9,6 +9,7 @@
 package com.moonshile.storage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
@@ -72,15 +74,23 @@ public class Record implements Serializable {
 		_remarks = AESHelper.encrypt(remarks, key);
 	}
 	
+	public Record(){
+		_id = -1;
+	}
+	
 	/********************************** Methods ********************************************/
 	
 	/**
-	 * Add to database
+	 * Add to database, if the record has already been inserted, then update it
 	 */
 	public void add(Context context){
-		SQLiteDatabase db = SQLiteFactory.getInstance(context).getWritableDatabase();
-		_id = db.insert(Contract.RecordSchema.TABLE_NAME, null, getValues());
-		db.close();
+		if(_id < 0){
+			SQLiteDatabase db = SQLiteFactory.getInstance(context).getWritableDatabase();
+			_id = db.insert(Contract.RecordSchema.TABLE_NAME, null, getValues());
+			db.close();
+		}else{
+			update(context);
+		}
 	}
 	
 	/**
@@ -244,7 +254,7 @@ public class Record implements Serializable {
 	 * @return path of exported file
 	 */
 	@SuppressLint("SimpleDateFormat")
-	public static String export(List<Record> records) 
+	public static String exportRecords(List<Record> records) 
 			throws IOException, XmlPullParserException, InvalidKeyException, IllegalArgumentException, 
 			IllegalStateException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, 
 			BadPaddingException, NoSuchProviderException{
@@ -292,6 +302,87 @@ public class Record implements Serializable {
 		//fout.flush();
 		fout.close();
 		return path;
+	}
+	
+	/**
+	 * import records from sdcard with default path, this method won't insert the records into database
+	 * @return the records
+	 */
+	public static List<Record> importRecords() 
+			throws IOException, XmlPullParserException, InvalidKeyException, 
+			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException, NoSuchProviderException{
+		List<Record> res = new ArrayList<Record>();
+		String path = Environment.getExternalStorageDirectory().getPath()
+				+ "/Failword";
+		File f = new File(path);
+		if(f.exists() && f.isDirectory()){
+			File[] files = f.listFiles();
+			f = new File(path + "/0000");
+			for(File file: files){
+				if(file.getCanonicalPath().compareTo(f.getCanonicalPath()) > 0){
+					f = file;
+				}
+			}
+			FileInputStream fin = new FileInputStream(f);
+			XmlPullParserFactory pullParserFactory = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = pullParserFactory.newPullParser();
+			parser.setInput(fin, "utf-8");
+			int eventType = parser.getEventType();
+			Record record = null;
+			while(eventType != XmlPullParser.END_DOCUMENT){
+				switch(eventType){
+				case XmlPullParser.START_DOCUMENT:
+					break;
+				case XmlPullParser.START_TAG:
+					String name = parser.getName();
+					if(name.equals(XML_RECORD)){
+						record = new Record();
+					}else if(name.equals(XML_RECORD_TAG)){
+						record.setTag(parser.nextText());
+					}else if(name.equals(XML_RECORD_USERNAME)){
+						record.setUsername(parser.nextText());
+					}else if(name.equals(XML_RECORD_PASSWORD)){
+						record.setPassword(parser.nextText());
+					}else if(name.equals(XML_RECORD_REMARKS)){
+						record.setRemarks(parser.nextText());
+					}
+					break;
+				case XmlPullParser.END_TAG:
+					if(parser.getName().equals(XML_RECORD) && record != null){
+						res.add(record);
+						record = null;
+					}
+					break;
+				}
+				eventType = parser.next();
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * merge same records in database, but won't influence records given
+	 * @return same records should to be removed in given records
+	 */
+	public static List<Record> mergeRecords(List<Record> records, Context context){
+		List<Record> toRm = new ArrayList<Record>();
+		if(records.size() > 1){
+			for(int i = 1; i < records.size(); i++){
+				if(records.get(i).isSame(records.get(i - 1))){
+					toRm.add(records.get(i));
+				}
+			}
+			for(Record rm: toRm){
+				rm.delete(context);
+			}
+		}
+		return toRm;
+	}
+	
+	public boolean isSame(Record record){
+		return _tag.equals(record.getTag()) && _username.equals(record.getUsername()) &&
+				_password.equals(record.getPassword()) && _remarks.equals(record.getRemarks());
 	}
 	
 	/********************************** Fields ********************************************/
