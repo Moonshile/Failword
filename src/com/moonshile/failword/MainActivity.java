@@ -114,7 +114,6 @@ public class MainActivity extends Activity {
 
 		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
 		if(path != null){
-			Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 			onImport(path);
 		}
 	}
