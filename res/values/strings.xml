@@ -9,6 +9,7 @@
     <string name="loading_logining">Signing&#8230;</string>
     <string name="loading_hint">Global key</string>
     <string name="loading_wrong_key_tip">Wrong global key!</string>
+    <string name="loading_forbidden">Input wrong key too many times, try again tomorrow&#8230;</string>
     <string name="loading_exception_tip">Exception occurred! Restart please&#8230;</string>
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">Search by tag</string>

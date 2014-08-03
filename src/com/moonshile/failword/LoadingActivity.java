@@ -3,13 +3,16 @@ package com.moonshile.failword;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,6 +39,8 @@ public class LoadingActivity extends Activity {
 	public static final String INTENT_RECORDS = "records";
 	
 	public static final String KEY_SET = "key has been set";
+	public static final String LAST_SIGNING = "last signing";
+	public static final String ERROR_COUNT = "error count";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class LoadingActivity extends Activity {
 		PRNGFixes.apply();
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -66,6 +73,21 @@ public class LoadingActivity extends Activity {
 			// if this app is used first time
 			tips.setText(tipStrs[0]);
 		}
+		String last_signing = sharedPref.getString(LAST_SIGNING, null);
+		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		if(last_signing == null || last_signing.compareTo(today) < 0){
+			SharedPreferences.Editor editor = sharedPref.edit();
+			editor.putString(LAST_SIGNING, today);
+			editor.putInt(ERROR_COUNT, 0);
+			editor.commit();
+		}
+		int error_count = sharedPref.getInt(ERROR_COUNT, 0);
+		if(error_count >= 3){
+			button.setClickable(false);
+			button.setTextColor(getResources().getColor(R.color.gray));
+			tips.setTextColor(getResources().getColor(R.color.light_red));
+			tips.setText(R.string.loading_forbidden);
+		}
 	}
 	
 	public void onLogin(View view){
@@ -73,6 +95,9 @@ public class LoadingActivity extends Activity {
 		button.setText(R.string.loading_logining);
 		button.setTextColor(getResources().getColor(R.color.gray));
 		button.setClickable(false);
+		((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+				findViewById(R.id.loading_password).getWindowToken(), 0);
+		
 		Handler handler = new Handler();
 		final LoadingActivity context = this;
 		
@@ -80,14 +105,20 @@ public class LoadingActivity extends Activity {
 		handler.post(new Runnable(){
 			
 			private void wrongKey(){
+				SharedPreferences.Editor editor = sharedPref.edit();
+				editor.putInt(ERROR_COUNT, sharedPref.getInt(ERROR_COUNT, 0) + 1);
+				editor.commit();
+				
 				((EditText)findViewById(R.id.loading_password)).setText("");
 				TextView tips = (TextView)findViewById(R.id.loading_tips);
 				tips.setTextColor(getResources().getColor(R.color.light_red));
-				tips.setText(R.string.loading_wrong_key_tip);
+				tips.setText(sharedPref.getInt(ERROR_COUNT, 0) >= 3 ? 
+						R.string.loading_forbidden : R.string.loading_wrong_key_tip);
 
 				Button button = ((Button)findViewById(R.id.loading_login));
 				button.setText(R.string.loading_login);
-				button.setTextColor(getResources().getColor(R.color.black));
+				button.setTextColor(getResources().getColor(sharedPref.getInt(ERROR_COUNT, 0) >= 3 ? 
+						R.color.gray : R.color.black));
 				button.setClickable(true);
 			}
 			
