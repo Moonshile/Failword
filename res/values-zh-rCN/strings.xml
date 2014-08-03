@@ -14,8 +14,12 @@
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">根据标签搜索</string>
     <string name="main_action_add_record">添加</string>
+    <string name="main_action_export">导出数据</string>
+    <string name="main_action_import">导入数据</string>
+    <string name="main_action_merge">合并相同数据</string>
     <string name="main_action_about">关于</string>
     <string name="main_edit_ok">已保存</string>
+    <string name="main_export_ok">导出到： </string>
     <string name="grid_item_image_desc">图标</string>
     <string name="edit_activity_title">编辑</string>
     <string name="edit_tag_hint">标签，如QQ</string>

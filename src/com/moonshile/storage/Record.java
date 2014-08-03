@@ -8,21 +8,32 @@
  */
 package com.moonshile.storage;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
 import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.Contract;
@@ -226,7 +237,72 @@ public class Record implements Serializable {
 		return res;
 	}
 	
+	/**
+	 * export records to sdcard
+	 * @param records
+	 * @param key
+	 * @return path of exported file
+	 */
+	@SuppressLint("SimpleDateFormat")
+	public static String export(List<Record> records) 
+			throws IOException, XmlPullParserException, InvalidKeyException, IllegalArgumentException, 
+			IllegalStateException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, 
+			BadPaddingException, NoSuchProviderException{
+		String path = Environment.getExternalStorageDirectory().getPath()
+				+ "/Failword";
+		File f = new File(path);
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		path += "/" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".failword";
+		f = new File(path);
+		if (!f.exists()) {
+			f.createNewFile();
+		}
+		FileOutputStream fout = new FileOutputStream(f, false);
+		XmlPullParserFactory pullParserFactory = XmlPullParserFactory.newInstance();
+		XmlSerializer serializer = pullParserFactory.newSerializer();
+		serializer.setOutput(fout, "utf-8");
+		serializer.startDocument("utf-8", true);
+		//startTag(namespace, tagName)
+		serializer.startTag(null, XML_ROOT);
+		for(Record record: records){
+			serializer.startTag(null, XML_RECORD);
+			
+			serializer.startTag(null, XML_RECORD_TAG);
+			serializer.text(record.getTag());
+			serializer.endTag(null, XML_RECORD_TAG);
+			
+			serializer.startTag(null, XML_RECORD_USERNAME);
+			serializer.text(record.getUsername());
+			serializer.endTag(null, XML_RECORD_USERNAME);
+			
+			serializer.startTag(null, XML_RECORD_PASSWORD);
+			serializer.text(record.getPassword());
+			serializer.endTag(null, XML_RECORD_PASSWORD);
+			
+			serializer.startTag(null, XML_RECORD_REMARKS);
+			serializer.text(record.getRemarks());
+			serializer.endTag(null, XML_RECORD_REMARKS);
+			
+			serializer.endTag(null, XML_RECORD);
+		}
+		serializer.endTag(null, XML_ROOT);
+		serializer.endDocument();
+		//fout.flush();
+		fout.close();
+		return path;
+	}
+	
 	/********************************** Fields ********************************************/
+	
+
+	public static final String XML_ROOT = "failword";
+	public static final String XML_RECORD = "record";
+	public static final String XML_RECORD_TAG = "tag";
+	public static final String XML_RECORD_USERNAME = "username";
+	public static final String XML_RECORD_PASSWORD = "password";
+	public static final String XML_RECORD_REMARKS = "remarks";
 	
 	private long _id;
 	private String _tag;
@@ -247,12 +323,24 @@ public class Record implements Serializable {
 	public void setTag(String tag, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_tag = AESHelper.encrypt(tag, key);
 	}
+	public String getTag(){
+		return _tag;
+	}
+	public void setTag(String tag){
+		_tag = tag;
+	}
 	
 	public String getUsername(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_username, key);
 	}
 	public void setUsername(String username, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_username = AESHelper.encrypt(username, key);
+	}
+	public String getUsername(){
+		return _username;
+	}
+	public void setUsername(String username){
+		_username = username;
 	}
 	
 	public String getPassword(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
@@ -261,6 +349,12 @@ public class Record implements Serializable {
 	public void setPassword(String password, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_password = AESHelper.encrypt(password, key);
 	}
+	public String getPassword(){
+		return _password;
+	}
+	public void setPassword(String password){
+		_password = password;
+	}
 	
 	public String getRemarks(byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		return AESHelper.decrypt(_remarks, key);
@@ -268,4 +362,11 @@ public class Record implements Serializable {
 	public void setRemarks(String remarks, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
 		_remarks = AESHelper.encrypt(remarks, key);
 	}
+	public String getRemarks(){
+		return _remarks;
+	}
+	public void setRemarks(String remarks){
+		_remarks = remarks;
+	}
+	
 }

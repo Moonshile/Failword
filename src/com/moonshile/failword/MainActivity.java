@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,6 +125,20 @@ public class MainActivity extends Activity {
 			Intent intent = new Intent(this, EditActivity.class);
 			intent.putExtra(INTENT_KEY, key);
 			this.startActivityForResult(intent, REQUEST_CODE_EDIT);
+			break;
+		case R.id.main_action_export:
+			try {
+				String path = Record.export(adapterHelper.getRecordsBase());
+				Toast.makeText(this, getResources().getString(R.string.main_export_ok) + path, Toast.LENGTH_SHORT).show();
+			} catch (Exception e) {
+				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
+				e.printStackTrace();
+				Log.e("export", e.toString());
+			}
+			break;
+		case R.id.main_action_import:
+			break;
+		case R.id.main_action_merge:
 			break;
 		case R.id.main_action_about:
 			break;

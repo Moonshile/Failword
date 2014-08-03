@@ -14,8 +14,12 @@
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">Search by tag</string>
     <string name="main_action_add_record">Add Record</string>
+    <string name="main_action_export">Export</string>
+    <string name="main_action_import">Import</string>
+    <string name="main_action_merge">Merge same data</string>
     <string name="main_action_about">About</string>
     <string name="main_edit_ok">Record already saved</string>
+    <string name="main_export_ok">Exported to: </string>
     <string name="grid_item_image_desc">logo of app</string>
     <string name="edit_activity_title">Edit Record</string>
     <string name="edit_tag_hint">Tag, such as Google</string>
