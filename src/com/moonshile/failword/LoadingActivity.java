@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -32,11 +33,13 @@ import com.moonshile.storage.Record;
 
 public class LoadingActivity extends Activity {
 	
-	private static final int INIT_RECORDS_COUNT = 28;
+	//private static final int INIT_RECORDS_COUNT = 28;
 	private SharedPreferences sharedPref;
+	private String import_path;
 
 	public static final String INTENT_KEY = "key";
 	public static final String INTENT_RECORDS = "records";
+	public static final String INTENT_IMPORT_PATH = "import path";
 	
 	public static final String KEY_SET = "key has been set";
 	public static final String LAST_SIGNING = "last signing";
@@ -48,6 +51,12 @@ public class LoadingActivity extends Activity {
 		getActionBar().hide();
 		setContentView(R.layout.activity_loading);
 		sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		
+		Intent intent = getIntent();
+		Uri uri = intent.getData();
+		if(uri != null){
+			import_path = uri.toString().replace(uri.getScheme() + "://", "");
+		}
 		
 		// fix bugs of PRNG while using AES
 		PRNGFixes.apply();
@@ -127,6 +136,15 @@ public class LoadingActivity extends Activity {
 				tips.setTextColor(getResources().getColor(R.color.light_red));
 				tips.setText(R.string.loading_exception_tip);
 			}
+			
+			private void switchActivity(ArrayList<Record> records, byte[] key){
+				Intent intent = new Intent(context, MainActivity.class);
+				intent.putExtra(INTENT_KEY, key);
+				intent.putExtra(INTENT_RECORDS, records);
+				intent.putExtra(INTENT_IMPORT_PATH, import_path);
+				context.startActivity(intent);
+				context.finish();
+			}
 
 			@Override
 			public void run() {
@@ -141,23 +159,15 @@ public class LoadingActivity extends Activity {
 							// key is wrong
 							wrongKey();
 						}else{
-							ArrayList<Record> records = (ArrayList<Record>)Record.fetchAllRecords(context, 0, INIT_RECORDS_COUNT, key);
-							Intent intent = new Intent(context, MainActivity.class);
-							intent.putExtra(INTENT_KEY, key);
-							intent.putExtra(INTENT_RECORDS, records);
-							context.startActivity(intent);
-							context.finish();
+							ArrayList<Record> records = (ArrayList<Record>)Record.fetchAllRecords(context, 0, -1, key);
+							switchActivity(records, key);
 						}
 					}else{
 						// if this app is used first time
 						SharedPreferences.Editor editor = sharedPref.edit();
 						editor.putString(KEY_SET, AESHelper.encrypt(KEY_SET, key));
 						editor.commit();
-						Intent intent = new Intent(context, MainActivity.class);
-						intent.putExtra(INTENT_KEY, key);
-						intent.putExtra(INTENT_RECORDS, new ArrayList<Record>());
-						context.startActivity(intent);
-						context.finish();
+						switchActivity(new ArrayList<Record>(), key);
 					}
 				} catch (InvalidKeyException | NoSuchAlgorithmException
 						| NoSuchPaddingException | IllegalBlockSizeException

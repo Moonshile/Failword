@@ -304,26 +304,10 @@ public class Record implements Serializable {
 		return path;
 	}
 	
-	/**
-	 * import records from sdcard with default path, this method won't insert the records into database
-	 * @return the records
-	 */
-	public static List<Record> importRecords() 
-			throws IOException, XmlPullParserException, InvalidKeyException, 
-			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
-			BadPaddingException, NoSuchProviderException{
+	public static List<Record> importRecords(String path) throws XmlPullParserException, IOException{
 		List<Record> res = new ArrayList<Record>();
-		String path = Environment.getExternalStorageDirectory().getPath()
-				+ "/Failword";
 		File f = new File(path);
-		if(f.exists() && f.isDirectory()){
-			File[] files = f.listFiles();
-			f = new File(path + "/0000");
-			for(File file: files){
-				if(file.getCanonicalPath().compareTo(f.getCanonicalPath()) > 0){
-					f = file;
-				}
-			}
+		if(f.exists() && f.isFile()){
 			FileInputStream fin = new FileInputStream(f);
 			XmlPullParserFactory pullParserFactory = XmlPullParserFactory.newInstance();
 			XmlPullParser parser = pullParserFactory.newPullParser();
@@ -357,6 +341,31 @@ public class Record implements Serializable {
 				}
 				eventType = parser.next();
 			}
+		}
+		return res;
+	}
+	
+	/**
+	 * import records from sdcard with default path, this method won't insert the records into database
+	 * @return the records
+	 */
+	public static List<Record> importRecords() 
+			throws IOException, XmlPullParserException, InvalidKeyException, 
+			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException, NoSuchProviderException{
+		List<Record> res = new ArrayList<Record>();
+		String path = Environment.getExternalStorageDirectory().getPath()
+				+ "/Failword";
+		File f = new File(path);
+		if(f.exists() && f.isDirectory()){
+			File[] files = f.listFiles();
+			f = new File(path + "/0000");
+			for(File file: files){
+				if(file.getCanonicalPath().compareTo(f.getCanonicalPath()) > 0){
+					f = file;
+				}
+			}
+			return importRecords(f.getCanonicalPath());
 		}
 		return res;
 	}

@@ -111,6 +111,12 @@ public class MainActivity extends Activity {
 			}
 			
 		});
+
+		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
+		if(path != null){
+			Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
+			onImport(path);
+		}
 	}
 
 	@Override
@@ -188,7 +194,7 @@ public class MainActivity extends Activity {
 			onExport();
 			break;
 		case R.id.main_action_import:
-			onImport();
+			onImport(null);
 			break;
 		case R.id.main_action_merge:
 			onMerge();
@@ -218,14 +224,15 @@ public class MainActivity extends Activity {
 		});
 	}
 	
-	private void onImport(){
+	private void onImport(String importPath){
 		Handler handler = new Handler();
+		final String import_path = importPath;
 		handler.post(new Runnable(){
 
 			@Override
 			public void run() {
 				try {
-					List<Record> importedRecords = Record.importRecords();
+					List<Record> importedRecords = (import_path == null ? Record.importRecords() : Record.importRecords(import_path));
 					for(Record r: importedRecords){
 						r.add(context);
 						adapterHelper.insertOrUpdate(r);
