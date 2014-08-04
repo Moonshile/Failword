@@ -221,6 +221,8 @@ public class MainActivity extends Activity {
 			this.startActivityForResult(intentChange, REQUEST_CODE_CHANGE);
 			break;
 		case R.id.main_action_about:
+			Intent intentAbout = new Intent(this, AboutActivity.class);
+			this.startActivity(intentAbout);
 			break;
 		}
 		return super.onOptionsItemSelected(item);

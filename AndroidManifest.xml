@@ -53,6 +53,10 @@
             android:name=".ChangeKeyActivity"
             android:label="@string/change_pwd_activity_title" >
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about_activity_title" >
+        </activity>
     </application>
 
 </manifest>

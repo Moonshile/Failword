@@ -43,11 +43,14 @@
     <string name="detail_btn_edit">Edit</string>
     <string name="detail_btn_delete">Del</string>
     <string name="detail_delete_warning">Long click to delete!</string>
-    <string name="change_pwd_activity_title">Change Password</string>
+    <string name="change_pwd_activity_title">Change global key</string>
     <string name="change_old_pwd_hint">Old password</string>
     <string name="change_new_pwd_hint">New password</string>
     <string name="change_new_pwd_cfm_hint">Confirm new password</string>
     <string name="change_wrong_old_key">Wrong old key</string>
     <string name="change_dif_new_keys">New keys are different</string>
+    <string name="about_activity_title">About</string>
+    <string name="about_author">This app is authored by Moonshile, please visit moonshile.com. Any advice, Email to moonshile@foxmail.com</string>
+    <string name="about_app">This app is an OSS, you can clone it on https://github.com/Moonshile/Failword. For more information, see Readme file in the source package.</string>
 
 </resources>
