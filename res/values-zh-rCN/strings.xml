@@ -21,6 +21,7 @@
     <string name="main_edit_ok">已保存</string>
     <string name="main_export_ok">导出到： </string>
     <string name="main_merged">导入完成，相同数据已合并</string>
+    <string name="main_import_error_hint">导入出现问题，可能是因为密钥错误</string>
     <string name="grid_item_image_desc">图标</string>
     <string name="edit_activity_title">编辑</string>
     <string name="edit_tag_hint">标签，如QQ</string>

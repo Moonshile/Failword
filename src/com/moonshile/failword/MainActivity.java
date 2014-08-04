@@ -233,6 +233,7 @@ public class MainActivity extends Activity {
 				try {
 					List<Record> importedRecords = (import_path == null ? Record.importRecords() : Record.importRecords(import_path));
 					for(Record r: importedRecords){
+						r.getTag(key); // validation key
 						r.add(context);
 						adapterHelper.insertOrUpdate(r);
 					}
@@ -245,10 +246,12 @@ public class MainActivity extends Activity {
 					}
 					adapter.notifyDataSetChanged();
 					updateTags();
+				} catch (BadPaddingException e){
+					Toast.makeText(context, R.string.main_import_error_hint, Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
-					Log.e("export", e.toString());
+					Log.e("import", e.toString());
 				}
 			}
 			
