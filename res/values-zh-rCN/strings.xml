@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Failword</string>
+    <string name="btn_save">保存</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_saving">正在保存&#8230;</string>
     <string name="error_hint">发生了错误！</string>
     <string name="cancel_hint">操作已取消！</string>
     <string name="loading_text">Failword</string>
@@ -18,19 +21,19 @@
     <string name="main_action_import">导入数据</string>
     <string name="main_action_merge">合并相同数据</string>
     <string name="main_action_about">关于</string>
+    <string name="main_action_change_key">修改密钥</string>
     <string name="main_edit_ok">已保存</string>
     <string name="main_export_ok">导出到： </string>
     <string name="main_merged">导入完成，相同数据已合并</string>
     <string name="main_import_error_hint">导入出现问题，可能是因为密钥错误</string>
+    <string name="main_change_ok">更改成功，请重新进入应用</string>
+    <string name="main_change_error">出现错误，可重试</string>
     <string name="grid_item_image_desc">图标</string>
     <string name="edit_activity_title">编辑</string>
     <string name="edit_tag_hint">标签，如QQ</string>
     <string name="edit_username_hint">用户名，如123456</string>
     <string name="edit_password_hint">密码，如abc123</string>
     <string name="edit_remarks_hint">备注，你需要记住的其他信息</string>
-    <string name="edit_save">保存</string>
-    <string name="edit_cancel">取消</string>
-    <string name="edit_saving">正在保存&#8230;</string>
     <string name="detail_activity_title">详情</string>
     <string name="detail_tag_text">标签：</string>
     <string name="detail_username_text">用户名：</string>
@@ -40,5 +43,10 @@
     <string name="detail_btn_edit">编辑</string>
     <string name="detail_btn_delete">删除</string>
     <string name="detail_delete_warning">长按才可以删除哦~</string>
+    <string name="change_old_pwd_hint">旧密钥</string>
+    <string name="change_new_pwd_hint">新密钥</string>
+    <string name="change_new_pwd_cfm_hint">确认新密钥</string>
+    <string name="change_wrong_old_key">旧密钥错误</string>
+    <string name="change_dif_new_keys">新密钥不一致</string>
 
 </resources>

@@ -40,6 +40,7 @@ public class LoadingActivity extends Activity {
 	public static final String INTENT_KEY = "key";
 	public static final String INTENT_RECORDS = "records";
 	public static final String INTENT_IMPORT_PATH = "import path";
+	public static final String PREF_NAME = "moonpref";
 	
 	public static final String KEY_SET = "key has been set";
 	public static final String LAST_SIGNING = "last signing";
@@ -50,7 +51,7 @@ public class LoadingActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getActionBar().hide();
 		setContentView(R.layout.activity_loading);
-		sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+		sharedPref = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		
 		Intent intent = getIntent();
 		Uri uri = intent.getData();
@@ -74,6 +75,7 @@ public class LoadingActivity extends Activity {
 		button.setTextColor(getResources().getColor(R.color.black));
 		button.setClickable(true);
 		TextView tips = (TextView)findViewById(R.id.loading_tips);
+		tips.setTextColor(getResources().getColor(R.color.dark_gray));
 		String[] tipStrs = getResources().getStringArray(R.array.loading_tips);
 		if(sharedPref.contains(KEY_SET)){
 			// if the user has set global key
@@ -105,7 +107,7 @@ public class LoadingActivity extends Activity {
 		button.setTextColor(getResources().getColor(R.color.gray));
 		button.setClickable(false);
 		((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-				findViewById(R.id.loading_password).getWindowToken(), 0);
+				view.getWindowToken(), 0);
 		
 		Handler handler = new Handler();
 		final LoadingActivity context = this;

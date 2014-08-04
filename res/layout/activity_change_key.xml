@@ -9,51 +9,39 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.moonshile.failword.EditActivity" >
-    
-    <EditText 
-        android:id="@+id/record_edit_tag"
+    tools:context="com.moonshile.failword.ChangeKeyActivity" >
+
+    <EditText android:id="@+id/change_old_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin"
         android:paddingTop="@dimen/view_vertical_padding"
         android:paddingBottom="@dimen/view_vertical_padding"
-        android:hint="@string/edit_tag_hint"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <EditText 
-        android:id="@+id/record_edit_username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop = "@dimen/small_margin"
-        android:paddingTop="@dimen/view_vertical_padding"
-        android:paddingBottom="@dimen/view_vertical_padding"
-        android:hint="@string/edit_username_hint"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <EditText 
-        android:id="@+id/record_edit_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop = "@dimen/small_margin"
-        android:paddingTop="@dimen/view_vertical_padding"
-        android:paddingBottom="@dimen/view_vertical_padding"
-        android:hint="@string/edit_password_hint"
+        android:hint="@string/change_old_pwd_hint"
         android:inputType="textPassword"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
-    <EditText 
-        android:id="@+id/record_edit_remarks"
+    <EditText android:id="@+id/change_new_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop = "@dimen/small_margin"
         android:paddingTop="@dimen/view_vertical_padding"
         android:paddingBottom="@dimen/view_vertical_padding"
-        android:hint="@string/edit_remarks_hint"
+        android:hint="@string/change_new_pwd_hint"
+        android:inputType="textPassword"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <EditText android:id="@+id/change_new_pwd_cfm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "@dimen/small_margin"
+        android:paddingTop="@dimen/view_vertical_padding"
+        android:paddingBottom="@dimen/view_vertical_padding"
+        android:hint="@string/change_new_pwd_cfm_hint"
+        android:inputType="textPassword"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <Button 
-        android:id="@+id/record_edit_button_save"
+    <Button android:id="@+id/change_button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin"
@@ -64,8 +52,7 @@
         android:textColor="@color/dark_gray"
         android:onClick="onSave" />
     
-    <Button 
-        android:id="@+id/record_edit_button_cancel"
+    <Button android:id="@+id/change_button_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
@@ -76,4 +63,13 @@
         android:textColor="@color/dark_gray"
         android:onClick="onCancel" />
     
+	<TextView android:id="@+id/change_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/view_horizontal_margin"
+        android:paddingRight="@dimen/view_horizontal_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:textColor="@color/light_red"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </LinearLayout>

@@ -32,6 +32,12 @@
         android:showAsAction="never" />
     
     <item
+        android:id="@+id/main_action_change_key"
+        android:orderInCategory="104"
+        android:title="@string/main_action_change_key"
+        android:showAsAction="never" />
+    
+    <item
         android:id="@+id/main_action_about"
         android:orderInCategory="10000"
         android:title="@string/main_action_about"

@@ -54,9 +54,11 @@ public class MainActivity extends Activity {
 	
 	public static final String INTENT_RECORD_EDITED = "INTENT_RECORD_EDITED";
 	public static final String INTENT_KEY = "INTENT_KEY";
+	public static final String INTENT_RECORDS = "INTENT_RECORDS";
 	
 	public static final int REQUEST_CODE_EDIT = 0;
 	public static final int REQUEST_CODE_DETAIL = 1;
+	public static final int REQUEST_CODE_CHANGE = 2;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -176,6 +178,20 @@ public class MainActivity extends Activity {
 				break;
 			}
 			break;
+		case REQUEST_CODE_CHANGE:
+			switch(resultCode){
+			case ChangeKeyActivity.RESULT_OK:
+				Toast.makeText(this, R.string.main_change_ok, Toast.LENGTH_SHORT).show();
+				this.finish();
+				break;
+			case ChangeKeyActivity.RESULT_CANCELED:
+				break;
+			case ChangeKeyActivity.RESULT_ERROR:
+				Toast.makeText(this, R.string.main_change_error, Toast.LENGTH_SHORT).show();
+				onImport(null);
+				break;
+			}
+			break;
 		}
 	}
 	
@@ -197,6 +213,12 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.main_action_merge:
 			onMerge();
+			break;
+		case R.id.main_action_change_key:
+			Intent intentChange = new Intent(this, ChangeKeyActivity.class);
+			intentChange.putExtra(INTENT_KEY, key);
+			intentChange.putExtra(INTENT_RECORDS, (ArrayList<Record>)adapterHelper.getRecordsBase());
+			this.startActivityForResult(intentChange, REQUEST_CODE_CHANGE);
 			break;
 		case R.id.main_action_about:
 			break;

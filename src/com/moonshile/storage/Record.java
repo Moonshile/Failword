@@ -389,6 +389,18 @@ public class Record implements Serializable {
 		return toRm;
 	}
 	
+	public static void changeKey(Context context, List<Record> records, byte[] old_key, byte[] new_key) 
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, 
+			IllegalBlockSizeException, BadPaddingException, NoSuchProviderException{
+		for(Record r: records){
+			r.setTag(r.getTag(old_key), new_key);
+			r.setUsername(r.getUsername(old_key), new_key);
+			r.setPassword(r.getPassword(old_key), new_key);
+			r.setRemarks(r.getRemarks(old_key), new_key);
+			r.update(context);
+		}
+	}
+	
 	public boolean isSame(Record record){
 		return _tag.equals(record.getTag()) && _username.equals(record.getUsername()) &&
 				_password.equals(record.getPassword()) && _remarks.equals(record.getRemarks());

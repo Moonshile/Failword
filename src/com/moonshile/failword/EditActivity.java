@@ -72,7 +72,7 @@ public class EditActivity extends Activity {
 	
 	public void onSave(View view){
 		Button button = (Button)view;
-		button.setText(R.string.edit_saving);
+		button.setText(R.string.btn_saving);
 		button.setTextColor(getResources().getColor(R.color.gray));
 		button.setClickable(false);
 		try{
