@@ -1,12 +1,5 @@
 package com.moonshile.failword;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import com.moonshile.storage.Record;
 
@@ -46,9 +39,7 @@ public class EditActivity extends Activity {
 			}else{
 				record = new Record("", "", "", "", key);
 			}
-		} catch (InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchProviderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Intent res = getIntent();
 			this.setResult(RESULT_ERROR, res);
@@ -80,9 +71,7 @@ public class EditActivity extends Activity {
 			record.setUsername(((EditText)findViewById(R.id.record_edit_username)).getText().toString(), key);
 			record.setPassword(((EditText)findViewById(R.id.record_edit_password)).getText().toString(), key);
 			record.setRemarks(((EditText)findViewById(R.id.record_edit_remarks)).getText().toString(), key);
-		} catch (InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchProviderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Intent res = getIntent();
 			this.setResult(RESULT_ERROR, res);

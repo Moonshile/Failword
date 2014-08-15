@@ -1,16 +1,11 @@
 package com.moonshile.failword;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -171,11 +166,6 @@ public class LoadingActivity extends Activity {
 						editor.commit();
 						switchActivity(new ArrayList<Record>(), key);
 					}
-				} catch (InvalidKeyException | NoSuchAlgorithmException
-						| NoSuchPaddingException | IllegalBlockSizeException
-						| NoSuchProviderException | IllegalArgumentException e) {
-					e.printStackTrace();
-					exception();
 				} catch(BadPaddingException e){
 					if(e.toString().contains("pad block corrupted")){
 						wrongKey();
@@ -183,6 +173,9 @@ public class LoadingActivity extends Activity {
 						e.printStackTrace();
 						exception();
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					exception();
 				}
 			}
 			

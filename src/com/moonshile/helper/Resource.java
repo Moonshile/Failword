@@ -27,7 +27,7 @@ public class Resource {
 			if(c.getName().equals("com.moonshile.failword.R$drawable")){
 				for(Field f: c.getDeclaredFields()){
 					if(f.getName().equals(name)){
-						return (int) f.get(null);
+						return (Integer) f.get(null);
 					}
 				}
 			}

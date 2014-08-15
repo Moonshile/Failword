@@ -1,13 +1,5 @@
 package com.moonshile.failword;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import com.moonshile.storage.Record;
 
 import android.app.Activity;
@@ -115,9 +107,7 @@ public class DetailActivity extends Activity {
 			((TextView)findViewById(R.id.detail_username_content)).setText(record.getUsername(key));
 			((TextView)findViewById(R.id.detail_password_content)).setText(record.getPassword(key));
 			((TextView)findViewById(R.id.detail_remarks_content)).setText(record.getRemarks(key));
-		} catch (InvalidKeyException | NoSuchAlgorithmException
-				| NoSuchPaddingException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchProviderException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Intent res = getIntent();
 			this.setResult(RESULT_ERROR, res);

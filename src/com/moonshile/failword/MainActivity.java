@@ -1,16 +1,11 @@
 package com.moonshile.failword;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 
 import com.moonshile.helper.AppIcon;
@@ -20,7 +15,6 @@ import com.moonshile.storage.Record;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -306,9 +300,7 @@ public class MainActivity extends Activity {
 				if(!tags.contains(r.getTag(key))){
 					tags.add(r.getTag(key));
 				}
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-					| NoSuchPaddingException | IllegalBlockSizeException
-					| BadPaddingException | NoSuchProviderException e) {
+			} catch (Exception e) {
 				Toast.makeText(this, R.string.error_hint, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
@@ -348,10 +340,7 @@ public class MainActivity extends Activity {
 						if(AppIcon.getStandardName(r.getTag(key)).equals(AppIcon.getStandardName(tag))){
 							records.add(r);
 						}
-					} catch (InvalidKeyException | NoSuchAlgorithmException
-							| NoSuchPaddingException
-							| IllegalBlockSizeException | BadPaddingException
-							| NoSuchProviderException e) {
+					} catch (Exception e) {
 						Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 					}
@@ -450,11 +439,7 @@ public class MainActivity extends Activity {
 				map.put(RECORD_ICON, 
 						Resource.getDrawableResByName(R.class, AppIcon.getIconName(r.getTag(key))));
 				map.put(RECORD_USERNAME, r.getUsername(key));
-			} catch (InvalidKeyException | NotFoundException
-					| IllegalAccessException | IllegalArgumentException
-					| NoSuchAlgorithmException | NoSuchPaddingException
-					| IllegalBlockSizeException | BadPaddingException
-					| NoSuchProviderException e) {
+			} catch (Exception e) {
 				Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
@@ -488,9 +473,7 @@ public class MainActivity extends Activity {
 						}else{
 							return f1.getUsername(key).compareTo(f2.getUsername(key));
 						}
-					} catch (InvalidKeyException | NoSuchAlgorithmException
-							| NoSuchPaddingException | IllegalBlockSizeException
-							| BadPaddingException | NoSuchProviderException e) {
+					} catch (Exception e) {
 						Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
 						e.printStackTrace();
 						context.finish();
