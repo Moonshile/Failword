@@ -26,6 +26,8 @@
     <string name="main_export_ok">导出到： </string>
     <string name="main_merged">导入完成，相同数据已合并</string>
     <string name="main_import_error_hint">导入出现问题，可能是因为密钥错误</string>
+    <string name="main_import_progress_text">正在导入： </string>
+    <string name="main_import_progress_count_unknown">（未知）</string>
     <string name="main_change_ok">更改成功，请重新进入应用</string>
     <string name="main_change_error">出现错误，可重试</string>
     <string name="grid_item_image_desc">图标</string>

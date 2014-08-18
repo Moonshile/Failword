@@ -344,8 +344,12 @@ public class Record implements Serializable {
 						Message msg = new Message();
 						msg.what = MSG_XML_RECORD_COUNT_AND_VERSION;
 						Bundle data = new Bundle();
-						data.putString(MSG_DATA_RECORD_COUNT, parser.getAttributeValue(XML_ROOT_ATTR_COUNT, "-1"));
-						data.putString(MSG_DATA_RECORD_VERSION, parser.getAttributeValue(XML_ROOT_ATTR_VERSION, "1"));
+						String count = parser.getAttributeValue(null, XML_ROOT_ATTR_COUNT);
+						count = count == null ? "-1" : count;
+						String version = parser.getAttributeValue(null, XML_ROOT_ATTR_VERSION);
+						version = version == null ? "1" : version;
+						data.putString(MSG_DATA_RECORD_COUNT, count);
+						data.putString(MSG_DATA_RECORD_VERSION, version);
 						msg.setData(data);
 						handler.sendMessage(msg);
 					}
@@ -367,6 +371,9 @@ public class Record implements Serializable {
 				}
 				eventType = parser.next();
 			}
+			Message msg = new Message();
+			msg.what = MSG_XML_FINISH;
+			handler.sendMessage(msg);
 		}
 		return res;
 	}
@@ -443,12 +450,13 @@ public class Record implements Serializable {
 	public static final String XML_RECORD_USERNAME = "username";
 	public static final String XML_RECORD_PASSWORD = "password";
 	public static final String XML_RECORD_REMARKS = "remarks";
-	public static final String XML_VERSION = "1";
+	public static final String XML_VERSION = "2";
 	public static final int MSG_XML_RECORD_COUNT_AND_VERSION = 0;
 	public static final String MSG_DATA_RECORD_COUNT = "MSG_DATA_RECORD_COUNT";
 	public static final String MSG_DATA_RECORD_VERSION = "MSG_DATA_RECORD_VERSION";
 	public static final int MSG_XML_IMPORTED_RECORDS_COUNT = 1;
 	public static final String MSG_DATA_IMPORTED_RECORDS_COUNT = "MSG_DATA_IMPORTED_RECORDS_COUNT";
+	public static final int MSG_XML_FINISH = 2;
 	
 	private long _id;
 	private String _tag;

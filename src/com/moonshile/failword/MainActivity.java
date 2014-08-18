@@ -1,6 +1,5 @@
 package com.moonshile.failword;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +13,7 @@ import com.moonshile.helper.MoonshileSort;
 import com.moonshile.helper.Resource;
 import com.moonshile.storage.Record;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +28,8 @@ import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -42,7 +44,7 @@ public class MainActivity extends Activity {
 	private SimpleAdapter adapter;
 	private ArrayAdapter<String> tagAdapter;
 	private final MainActivity context = this;
-	private DataHandler dataHandler; // for handling import or export of data
+	private Handler dataHandler; // for handling import or export of data
 
 	private static final String RECORD_ID = "RECORD_ID";
 	private static final String RECORD_TAG = "RECORD_TAG";
@@ -57,6 +59,7 @@ public class MainActivity extends Activity {
 	public static final int REQUEST_CODE_DETAIL = 1;
 	public static final int REQUEST_CODE_CHANGE = 2;
 	
+	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +119,40 @@ public class MainActivity extends Activity {
 			onImport(path);
 		}
 		
-		dataHandler = new DataHandler(this);
+		// TODO deal with handler leak
+		dataHandler = new Handler(){
+			private int total = -1;
+			
+			@Override
+			public void handleMessage(Message msg){
+				ProgressBar bar = (ProgressBar)findViewById(R.id.main_import_progress);
+				TextView barHint = (TextView)findViewById(R.id.main_import_progress_text);
+				switch(msg.what){
+				case Record.MSG_XML_RECORD_COUNT_AND_VERSION:
+					total = Integer.parseInt(msg.getData().getString(Record.MSG_DATA_RECORD_COUNT));
+					if(total > -1){
+						bar.setIndeterminate(false);
+						bar.setMax(total);
+					}else{
+						bar.setIndeterminate(true);
+					}
+					break;
+				case Record.MSG_XML_IMPORTED_RECORDS_COUNT:
+					int curCount = Integer.parseInt(msg.getData().getString(Record.MSG_DATA_IMPORTED_RECORDS_COUNT));
+					barHint.setText(context.getResources().getString(R.string.main_import_progress_text) + 
+							curCount + "/" + (total > -1 ? total + "" : 
+								context.getResources().getString(R.string.main_import_progress_count_unknown)));
+					if(total > -1){
+						bar.setProgress(curCount);
+					}
+					break;
+				case Record.MSG_XML_FINISH:
+					LinearLayout importHint = (LinearLayout)findViewById(R.id.main_import_data_dialog);
+					importHint.setVisibility(View.GONE);
+					break;
+				}
+			}
+		};
 	}
 
 	@Override
@@ -247,6 +283,9 @@ public class MainActivity extends Activity {
 	}
 	
 	private void onImport(String importPath){
+		LinearLayout importHint = (LinearLayout)findViewById(R.id.main_import_data_dialog);
+		importHint.setVisibility(View.VISIBLE);
+		
 		Handler handler = new Handler();
 		final String import_path = importPath;
 		handler.post(new Runnable(){
@@ -320,26 +359,6 @@ public class MainActivity extends Activity {
 	
 	
 	
-	private static class DataHandler extends Handler{
-		@SuppressWarnings("unused")
-		private final WeakReference<MainActivity> mActivity;
-		
-		public DataHandler(MainActivity context){
-			mActivity = new WeakReference<MainActivity>(context);
-		}
-		
-		@Override
-		public void handleMessage(Message msg){
-			switch(msg.what){
-			case Record.MSG_XML_RECORD_COUNT_AND_VERSION:
-				
-				break;
-			case Record.MSG_XML_IMPORTED_RECORDS_COUNT:
-				
-				break;
-			}
-		}
-	}
 	
 	
 	

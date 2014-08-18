@@ -26,6 +26,8 @@
     <string name="main_export_ok">Exported to: </string>
     <string name="main_merged">Same records has been merged after import</string>
     <string name="main_import_error_hint">Error occurred while importing, might for wrong key</string>
+    <string name="main_import_progress_text">Importing: </string>
+    <string name="main_import_progress_count_unknown">(unknown)</string>
     <string name="main_change_ok">Success! Resign in please</string>
     <string name="main_change_error">Error occurred, try again?</string>
     <string name="grid_item_image_desc">logo of app</string>
