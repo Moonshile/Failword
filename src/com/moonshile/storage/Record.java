@@ -35,7 +35,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 
 import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.Contract;
@@ -276,6 +279,8 @@ public class Record implements Serializable {
 		serializer.startDocument("utf-8", true);
 		//startTag(namespace, tagName)
 		serializer.startTag(null, XML_ROOT);
+		serializer.attribute(null, XML_ROOT_ATTR_COUNT, records.size() + "");
+		serializer.attribute(null, XML_ROOT_ATTR_VERSION, XML_VERSION);
 		for(Record record: records){
 			serializer.startTag(null, XML_RECORD);
 			
@@ -304,7 +309,11 @@ public class Record implements Serializable {
 		return path;
 	}
 	
-	public static List<Record> importRecords(String path) throws XmlPullParserException, IOException{
+	/**
+	 * import records from a specific file in sdcard
+	 * @return the records imported
+	 */
+	public static List<Record> importRecords(String path, Handler handler) throws XmlPullParserException, IOException{
 		List<Record> res = new ArrayList<Record>();
 		File f = new File(path);
 		if(f.exists() && f.isFile()){
@@ -314,6 +323,7 @@ public class Record implements Serializable {
 			parser.setInput(fin, "utf-8");
 			int eventType = parser.getEventType();
 			Record record = null;
+			int imported_count = 0;
 			while(eventType != XmlPullParser.END_DOCUMENT){
 				switch(eventType){
 				case XmlPullParser.START_DOCUMENT:
@@ -330,11 +340,27 @@ public class Record implements Serializable {
 						record.setPassword(parser.nextText());
 					}else if(name.equals(XML_RECORD_REMARKS)){
 						record.setRemarks(parser.nextText());
+					}else if(name.equals(XML_ROOT)){
+						Message msg = new Message();
+						msg.what = MSG_XML_RECORD_COUNT_AND_VERSION;
+						Bundle data = new Bundle();
+						data.putString(MSG_DATA_RECORD_COUNT, parser.getAttributeValue(XML_ROOT_ATTR_COUNT, "-1"));
+						data.putString(MSG_DATA_RECORD_VERSION, parser.getAttributeValue(XML_ROOT_ATTR_VERSION, "1"));
+						msg.setData(data);
+						handler.sendMessage(msg);
 					}
 					break;
 				case XmlPullParser.END_TAG:
 					if(parser.getName().equals(XML_RECORD) && record != null){
 						res.add(record);
+						imported_count++;
+						Message msg = new Message();
+						msg.what = MSG_XML_IMPORTED_RECORDS_COUNT;
+						Bundle data = new Bundle();
+						data.putString(MSG_DATA_IMPORTED_RECORDS_COUNT, imported_count + "");
+						msg.setData(data);
+						handler.sendMessage(msg);
+						
 						record = null;
 					}
 					break;
@@ -349,7 +375,7 @@ public class Record implements Serializable {
 	 * import records from sdcard with default path, this method won't insert the records into database
 	 * @return the records
 	 */
-	public static List<Record> importRecords() 
+	public static List<Record> importRecords(Handler handler) 
 			throws IOException, XmlPullParserException, InvalidKeyException, 
 			NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, NoSuchProviderException{
@@ -365,7 +391,7 @@ public class Record implements Serializable {
 					f = file;
 				}
 			}
-			return importRecords(f.getCanonicalPath());
+			return importRecords(f.getCanonicalPath(), handler);
 		}
 		return res;
 	}
@@ -410,11 +436,19 @@ public class Record implements Serializable {
 	
 
 	public static final String XML_ROOT = "failword";
+	public static final String XML_ROOT_ATTR_COUNT = "c";
+	public static final String XML_ROOT_ATTR_VERSION = "v";
 	public static final String XML_RECORD = "record";
 	public static final String XML_RECORD_TAG = "tag";
 	public static final String XML_RECORD_USERNAME = "username";
 	public static final String XML_RECORD_PASSWORD = "password";
 	public static final String XML_RECORD_REMARKS = "remarks";
+	public static final String XML_VERSION = "1";
+	public static final int MSG_XML_RECORD_COUNT_AND_VERSION = 0;
+	public static final String MSG_DATA_RECORD_COUNT = "MSG_DATA_RECORD_COUNT";
+	public static final String MSG_DATA_RECORD_VERSION = "MSG_DATA_RECORD_VERSION";
+	public static final int MSG_XML_IMPORTED_RECORDS_COUNT = 1;
+	public static final String MSG_DATA_IMPORTED_RECORDS_COUNT = "MSG_DATA_IMPORTED_RECORDS_COUNT";
 	
 	private long _id;
 	private String _tag;
