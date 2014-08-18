@@ -1,5 +1,6 @@
 package com.moonshile.failword;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -40,6 +42,7 @@ public class MainActivity extends Activity {
 	private SimpleAdapter adapter;
 	private ArrayAdapter<String> tagAdapter;
 	private final MainActivity context = this;
+	private DataHandler dataHandler; // for handling import or export of data
 
 	private static final String RECORD_ID = "RECORD_ID";
 	private static final String RECORD_TAG = "RECORD_TAG";
@@ -112,6 +115,8 @@ public class MainActivity extends Activity {
 		if(path != null){
 			onImport(path);
 		}
+		
+		dataHandler = new DataHandler(this);
 	}
 
 	@Override
@@ -249,7 +254,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void run() {
 				try {
-					List<Record> importedRecords = (import_path == null ? Record.importRecords() : Record.importRecords(import_path));
+					List<Record> importedRecords = (import_path == null ? 
+							Record.importRecords(dataHandler) : Record.importRecords(import_path, dataHandler));
 					for(Record r: importedRecords){
 						r.getTag(key); // validation key
 						r.add(context);
@@ -310,6 +316,31 @@ public class MainActivity extends Activity {
 	}
 	
 
+	
+	
+	
+	
+	private static class DataHandler extends Handler{
+		@SuppressWarnings("unused")
+		private final WeakReference<MainActivity> mActivity;
+		
+		public DataHandler(MainActivity context){
+			mActivity = new WeakReference<MainActivity>(context);
+		}
+		
+		@Override
+		public void handleMessage(Message msg){
+			switch(msg.what){
+			case Record.MSG_XML_RECORD_COUNT_AND_VERSION:
+				
+				break;
+			case Record.MSG_XML_IMPORTED_RECORDS_COUNT:
+				
+				break;
+			}
+		}
+	}
+	
 	
 	
 	
