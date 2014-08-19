@@ -103,8 +103,7 @@ public class AppIcon {
 			new String[]{"shanbay", "shanbei", "扇贝"},
 			new String[]{"sina", "xinlang", "新浪"},
 			new String[]{"wangyi", "netease", "126", "163", "网易", "yeah"},
-			new String[]{"jinshan", "金山", "猎豹", "liebao", "kingsoft"},
-			new String[]{""},
+			new String[]{"jinshan", "金山", "猎豹", "liebao", "kingsoft"}
 			
 	};
 }
