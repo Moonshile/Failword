@@ -167,22 +167,28 @@ public class MainActivity extends Activity {
 							c + "/" + total);
 					break;
 				case MessageTypes.MSG_MERGE_FINISH:
-					importHint.setVisibility(View.GONE);
 					adapter.notifyDataSetChanged();
 					updateTags();
 					if(total > 0){
 						Toast.makeText(context, R.string.main_merged, Toast.LENGTH_SHORT).show();
 					}
-					total = -1;
-					c = 0;
+					reset(importHint);
 					break;
 				case MessageTypes.MSG_ERROR:
+					reset(importHint);
 					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
 					break;
 				case MessageTypes.MSG_IMPORT_FAIL:
+					reset(importHint);
 					Toast.makeText(context, R.string.main_import_error_hint, Toast.LENGTH_SHORT).show();
 					break;
 				}
+			}
+			
+			private void reset(LinearLayout importHint){
+				importHint.setVisibility(View.GONE);
+				total = -1;
+				c = 0;
 			}
 		};
 	}

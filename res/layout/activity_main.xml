@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/xlight_blue"
+            android:background="@drawable/dialog_shape"
             android:padding="@dimen/small_margin" >
             
             <ProgressBar android:id="@+id/main_import_progress"
