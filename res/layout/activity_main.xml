@@ -60,7 +60,8 @@
             <ProgressBar android:id="@+id/main_import_progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="android:style/Widget.ProgressBar.Large" />
+                style="android:style/Widget.ProgressBar.Large"
+                android:indeterminate="false" />
             
             <TextView android:id="@+id/main_import_progress_text"
                 android:layout_width="wrap_content"

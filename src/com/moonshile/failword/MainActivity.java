@@ -9,6 +9,7 @@ import javax.crypto.BadPaddingException;
 
 
 import com.moonshile.helper.AppIcon;
+import com.moonshile.helper.MessageTypes;
 import com.moonshile.helper.MoonshileSort;
 import com.moonshile.helper.Resource;
 import com.moonshile.storage.Record;
@@ -29,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -58,6 +58,9 @@ public class MainActivity extends Activity {
 	public static final int REQUEST_CODE_EDIT = 0;
 	public static final int REQUEST_CODE_DETAIL = 1;
 	public static final int REQUEST_CODE_CHANGE = 2;
+	
+	public static final int IMPORTING_INC = 1;
+	
 	
 	@SuppressLint("HandlerLeak")
 	@SuppressWarnings("unchecked")
@@ -122,33 +125,62 @@ public class MainActivity extends Activity {
 		// TODO deal with handler leak
 		dataHandler = new Handler(){
 			private int total = -1;
+			private int c = 0;
 			
 			@Override
 			public void handleMessage(Message msg){
-				ProgressBar bar = (ProgressBar)findViewById(R.id.main_import_progress);
 				TextView barHint = (TextView)findViewById(R.id.main_import_progress_text);
+				LinearLayout importHint = (LinearLayout)findViewById(R.id.main_import_data_dialog);
+				int curCount = 0;
 				switch(msg.what){
-				case Record.MSG_XML_RECORD_COUNT_AND_VERSION:
-					total = Integer.parseInt(msg.getData().getString(Record.MSG_DATA_RECORD_COUNT));
-					if(total > -1){
-						bar.setIndeterminate(false);
-						bar.setMax(total);
-					}else{
-						bar.setIndeterminate(true);
-					}
+				case MessageTypes.MSG_XML_RECORD_COUNT_AND_VERSION:
+					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_RECORD_COUNT));
+					importHint.setVisibility(View.VISIBLE);
 					break;
-				case Record.MSG_XML_IMPORTED_RECORDS_COUNT:
-					int curCount = Integer.parseInt(msg.getData().getString(Record.MSG_DATA_IMPORTED_RECORDS_COUNT));
-					barHint.setText(context.getResources().getString(R.string.main_import_progress_text) + 
+				case MessageTypes.MSG_XML_READ_RECORDS_COUNT:
+					curCount = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_READ_RECORDS_COUNT));
+					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_reading) + 
 							curCount + "/" + (total > -1 ? total + "" : 
 								context.getResources().getString(R.string.main_import_progress_count_unknown)));
-					if(total > -1){
-						bar.setProgress(curCount);
-					}
 					break;
-				case Record.MSG_XML_FINISH:
-					LinearLayout importHint = (LinearLayout)findViewById(R.id.main_import_data_dialog);
+				case MessageTypes.MSG_XML_FINISH:
+					total = -1;
+					break;
+				case MessageTypes.MSG_IMPORT_START:
+					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_IMPORT_COUNT));
+					break;
+				case MessageTypes.MSG_IMPORTED_COUNT:
+					c += IMPORTING_INC;
+					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_importing) + 
+							c + "/" + total);
+					break;
+				case MessageTypes.MSG_IMPORT_FINISH:
+					total = -1;
+					c = 0;
+					break;
+				case MessageTypes.MSG_MERGE_START:
+					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_MERGE_COUNT));
+					break;
+				case MessageTypes.MSG_MERGED_COUNT:
+					c += IMPORTING_INC;
+					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_merging) + 
+							c + "/" + total);
+					break;
+				case MessageTypes.MSG_MERGE_FINISH:
 					importHint.setVisibility(View.GONE);
+					adapter.notifyDataSetChanged();
+					updateTags();
+					if(total > 0){
+						Toast.makeText(context, R.string.main_merged, Toast.LENGTH_SHORT).show();
+					}
+					total = -1;
+					c = 0;
+					break;
+				case MessageTypes.MSG_ERROR:
+					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					break;
+				case MessageTypes.MSG_IMPORT_FAIL:
+					Toast.makeText(context, R.string.main_import_error_hint, Toast.LENGTH_SHORT).show();
 					break;
 				}
 			}
@@ -172,7 +204,7 @@ public class MainActivity extends Activity {
 					Toast.makeText(this, R.string.cancel_hint, Toast.LENGTH_SHORT).show();
 				}else{
 					Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
-					adapterHelper.insertOrUpdate(record);
+					adapterHelper.insertOrUpdate(record, true);
 					// update gridview
 					adapter.notifyDataSetChanged();
 					updateTags();
@@ -192,7 +224,7 @@ public class MainActivity extends Activity {
 			case DetailActivity.RESULT_OK:
 				if(intent != null){
 					Record record = (Record)intent.getSerializableExtra(INTENT_RECORD_EDITED);
-					adapterHelper.insertOrUpdate(record);
+					adapterHelper.insertOrUpdate(record, true);
 					// update gridview
 					adapter.notifyDataSetChanged();
 					updateTags();
@@ -283,42 +315,51 @@ public class MainActivity extends Activity {
 	}
 	
 	private void onImport(String importPath){
-		LinearLayout importHint = (LinearLayout)findViewById(R.id.main_import_data_dialog);
-		importHint.setVisibility(View.VISIBLE);
 		
-		Handler handler = new Handler();
 		final String import_path = importPath;
-		handler.post(new Runnable(){
-
+		Thread thread = new Thread(new Runnable(){
 			@Override
 			public void run() {
 				try {
 					List<Record> importedRecords = (import_path == null ? 
 							Record.importRecords(dataHandler) : Record.importRecords(import_path, dataHandler));
-					for(Record r: importedRecords){
+					MessageTypes.sendMessage(MessageTypes.MSG_IMPORT_START, 
+							new String[]{MessageTypes.MSG_DATA_IMPORT_COUNT}, 
+							new String[]{importedRecords.size() + ""}, dataHandler);
+					for(int i = 0; i < importedRecords.size(); i++){
+						Record r = importedRecords.get(i);
 						r.getTag(key); // validation key
 						r.add(context);
-						adapterHelper.insertOrUpdate(r);
+						adapterHelper.insertOrUpdate(r, false);
+						if(i % IMPORTING_INC == 0){
+							MessageTypes.sendMessage(MessageTypes.MSG_IMPORTED_COUNT, null, null, dataHandler);
+						}
 					}
+					adapterHelper.sortAllRecords();
+					MessageTypes.sendMessage(MessageTypes.MSG_IMPORT_FINISH, null, null, dataHandler);
 					List<Record> toRm = Record.mergeRecords(adapterHelper.getRecordsBase(), context);
-					for(Record r: toRm){
+					MessageTypes.sendMessage(MessageTypes.MSG_MERGE_START, 
+							new String[]{MessageTypes.MSG_DATA_MERGE_COUNT}, 
+							new String[]{toRm.size() + ""}, dataHandler);
+					for(int i = 0; i < toRm.size(); i++){
+						Record r = toRm.get(i);
 						adapterHelper.delete(r);
+						if(i % IMPORTING_INC == 0){
+							MessageTypes.sendMessage(MessageTypes.MSG_MERGED_COUNT, null, null, dataHandler);
+						}
 					}
-					if(toRm.size() > 0){
-						Toast.makeText(context, R.string.main_merged, Toast.LENGTH_SHORT).show();
-					}
-					adapter.notifyDataSetChanged();
-					updateTags();
+					MessageTypes.sendMessage(MessageTypes.MSG_MERGE_FINISH, null, null, dataHandler);
 				} catch (BadPaddingException e){
-					Toast.makeText(context, R.string.main_import_error_hint, Toast.LENGTH_SHORT).show();
+					MessageTypes.sendMessage(MessageTypes.MSG_IMPORT_FAIL, null, null, dataHandler);
 				} catch (Exception e) {
-					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					MessageTypes.sendMessage(MessageTypes.MSG_ERROR, null, null, dataHandler);
 					e.printStackTrace();
 					Log.e("import", e.toString());
 				}
 			}
 			
 		});
+		thread.start();
 	}
 	
 	private void onMerge(){
@@ -405,9 +446,9 @@ public class MainActivity extends Activity {
 					new int[] {R.id.grid_item_tag, R.id.grid_item_username, R.id.grid_item_image});
 		}
 		
-		public void insertOrUpdate(Record r){
-			if(!existsAndUpdateRecords(r)){
-				insertIntoRecords(r);
+		public void insertOrUpdate(Record r, boolean sort){
+			if(!existsAndUpdateRecords(r, sort)){
+				insertIntoRecords(r, sort);
 			}
 		}
 		
@@ -433,7 +474,7 @@ public class MainActivity extends Activity {
 			}
 		}
 		
-		private boolean existsAndUpdateRecords(Record r){
+		private boolean existsAndUpdateRecords(Record r, boolean sort){
 			int records_index = -1;
 			int records_base_index = -1;
 			for(int i = 0; i < records.size(); i++){
@@ -450,9 +491,11 @@ public class MainActivity extends Activity {
 				records_base.set(records_base_index, r);
 				records.set(records_index, r);
 				recordMapList.set(records_index, this.convertRecordsToMap(r));
-				sortRecords(records_base);
-				sortRecords(records);
-				sortRecordMapList(recordMapList);
+				if(sort){
+					sortRecords(records_base);
+					sortRecords(records);
+					sortRecordMapList(recordMapList);
+				}
 				return true;
 			}
 			return false;
@@ -461,10 +504,21 @@ public class MainActivity extends Activity {
 		/**
 		 * insert a record into both records-list and map-list (after convertion)
 		 */
-		private void insertIntoRecords(Record r){
+		private void insertIntoRecords(Record r, boolean sort){
 			records_base.add(r);
 			records.add(r);
 			recordMapList.add(this.convertRecordsToMap(r));
+			if(sort){
+				sortRecords(records_base);
+				sortRecords(records);
+				sortRecordMapList(recordMapList);
+			}
+		}
+		
+		/**
+		 * sort all records in records_base, records and recordMapList
+		 */
+		public void sortAllRecords(){
 			sortRecords(records_base);
 			sortRecords(records);
 			sortRecordMapList(recordMapList);

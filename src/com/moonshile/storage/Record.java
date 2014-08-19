@@ -35,13 +35,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 
 import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.Contract;
+import com.moonshile.helper.MessageTypes;
 import com.moonshile.helper.SQLiteFactory;
 
 /**
@@ -341,40 +340,32 @@ public class Record implements Serializable {
 					}else if(name.equals(XML_RECORD_REMARKS)){
 						record.setRemarks(parser.nextText());
 					}else if(name.equals(XML_ROOT)){
-						Message msg = new Message();
-						msg.what = MSG_XML_RECORD_COUNT_AND_VERSION;
-						Bundle data = new Bundle();
 						String count = parser.getAttributeValue(null, XML_ROOT_ATTR_COUNT);
 						count = count == null ? "-1" : count;
 						String version = parser.getAttributeValue(null, XML_ROOT_ATTR_VERSION);
 						version = version == null ? "1" : version;
-						data.putString(MSG_DATA_RECORD_COUNT, count);
-						data.putString(MSG_DATA_RECORD_VERSION, version);
-						msg.setData(data);
-						handler.sendMessage(msg);
+						MessageTypes.sendMessage(MessageTypes.MSG_XML_RECORD_COUNT_AND_VERSION, 
+								new String[]{MessageTypes.MSG_DATA_RECORD_COUNT, MessageTypes.MSG_DATA_RECORD_VERSION}, 
+								new String[]{count, version}, handler);
 					}
 					break;
 				case XmlPullParser.END_TAG:
 					if(parser.getName().equals(XML_RECORD) && record != null){
 						res.add(record);
 						imported_count++;
-						Message msg = new Message();
-						msg.what = MSG_XML_IMPORTED_RECORDS_COUNT;
-						Bundle data = new Bundle();
-						data.putString(MSG_DATA_IMPORTED_RECORDS_COUNT, imported_count + "");
-						msg.setData(data);
-						handler.sendMessage(msg);
-						
+						if(imported_count % 20 == 0){
+							MessageTypes.sendMessage(MessageTypes.MSG_XML_READ_RECORDS_COUNT, 
+									new String[]{MessageTypes.MSG_DATA_READ_RECORDS_COUNT}, 
+									new String[]{imported_count + ""}, handler);
+						}
 						record = null;
 					}
 					break;
 				}
 				eventType = parser.next();
 			}
-			Message msg = new Message();
-			msg.what = MSG_XML_FINISH;
-			handler.sendMessage(msg);
 		}
+		MessageTypes.sendMessage(MessageTypes.MSG_XML_FINISH, null, null, handler);
 		return res;
 	}
 	
@@ -451,12 +442,6 @@ public class Record implements Serializable {
 	public static final String XML_RECORD_PASSWORD = "password";
 	public static final String XML_RECORD_REMARKS = "remarks";
 	public static final String XML_VERSION = "2";
-	public static final int MSG_XML_RECORD_COUNT_AND_VERSION = 0;
-	public static final String MSG_DATA_RECORD_COUNT = "MSG_DATA_RECORD_COUNT";
-	public static final String MSG_DATA_RECORD_VERSION = "MSG_DATA_RECORD_VERSION";
-	public static final int MSG_XML_IMPORTED_RECORDS_COUNT = 1;
-	public static final String MSG_DATA_IMPORTED_RECORDS_COUNT = "MSG_DATA_IMPORTED_RECORDS_COUNT";
-	public static final int MSG_XML_FINISH = 2;
 	
 	private long _id;
 	private String _tag;
