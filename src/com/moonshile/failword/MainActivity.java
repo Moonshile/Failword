@@ -75,6 +75,7 @@ public class MainActivity extends Activity {
 		adapter = adapterHelper.getAdapter(null, key);
 		GridView gridView = ((GridView)findViewById(R.id.main_grid_records));
 		gridView.setAdapter(adapter);
+		// show detail of a record while click items in gridview
 		gridView.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
@@ -88,6 +89,7 @@ public class MainActivity extends Activity {
 			
 		});
 
+		// show candidate records while searching
 		tags = new ArrayList<String>();
 		updateTags();
 		AutoCompleteTextView auto = ((AutoCompleteTextView)findViewById(R.id.main_search_text));
@@ -116,11 +118,6 @@ public class MainActivity extends Activity {
 			}
 			
 		});
-
-		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
-		if(path != null){
-			onImport(path);
-		}
 		
 		// TODO deal with handler leak
 		dataHandler = new Handler(){
@@ -191,6 +188,12 @@ public class MainActivity extends Activity {
 				c = 0;
 			}
 		};
+
+		// if open a exported file with failword
+		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
+		if(path != null){
+			onImport(path);
+		}
 	}
 
 	@Override
@@ -581,6 +584,10 @@ public class MainActivity extends Activity {
 						if(res != 0){
 							return res;
 						}else{
+							res = f1.getTag(key).compareTo(f2.getTag(key));
+							if(res != 0){
+								return res;
+							}
 							return f1.getUsername(key).compareTo(f2.getUsername(key));
 						}
 					} catch (Exception e) {
@@ -617,6 +624,10 @@ public class MainActivity extends Activity {
 					if(res != 0){
 						return res;
 					}else{
+						res = ((String)f1.get(RECORD_TAG)).compareTo((String)f2.get(RECORD_TAG));
+						if(res != 0){
+							return res;
+						}
 						return ((String)f1.get(RECORD_USERNAME)).compareTo((String)f2.get(RECORD_USERNAME));
 					}
 				}

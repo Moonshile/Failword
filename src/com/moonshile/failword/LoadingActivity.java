@@ -30,7 +30,7 @@ public class LoadingActivity extends Activity {
 	
 	//private static final int INIT_RECORDS_COUNT = 28;
 	private SharedPreferences sharedPref;
-	private String import_path;
+	private String import_path = null;
 
 	public static final String INTENT_KEY = "key";
 	public static final String INTENT_RECORDS = "records";
