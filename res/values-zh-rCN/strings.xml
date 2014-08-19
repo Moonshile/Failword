@@ -47,6 +47,7 @@
     <string name="detail_btn_edit">编辑</string>
     <string name="detail_btn_delete">删除</string>
     <string name="detail_delete_warning">长按才可以删除哦~</string>
+    <string name="detail_hidden">****** （触摸灰色区域以查看信息）</string>
     <string name="change_pwd_activity_title">更改密钥</string>
     <string name="change_old_pwd_hint">旧密钥</string>
     <string name="change_new_pwd_hint">新密钥</string>

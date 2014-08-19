@@ -47,6 +47,7 @@
     <string name="detail_btn_edit">Edit</string>
     <string name="detail_btn_delete">Del</string>
     <string name="detail_delete_warning">Long click to delete!</string>
+    <string name="detail_hidden">****** (Touch gray area to watch)</string>
     <string name="change_pwd_activity_title">Change global key</string>
     <string name="change_old_pwd_hint">Old password</string>
     <string name="change_new_pwd_hint">New password</string>
