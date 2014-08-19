@@ -584,6 +584,7 @@ public class MainActivity extends Activity {
 						if(res != 0){
 							return res;
 						}else{
+							// if their standard names are same, then use their true names
 							res = f1.getTag(key).compareTo(f2.getTag(key));
 							if(res != 0){
 								return res;
@@ -624,6 +625,7 @@ public class MainActivity extends Activity {
 					if(res != 0){
 						return res;
 					}else{
+						// if their standard names are same, then use their true names
 						res = ((String)f1.get(RECORD_TAG)).compareTo((String)f2.get(RECORD_TAG));
 						if(res != 0){
 							return res;
