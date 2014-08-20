@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 					int position, long id) {
 				Intent intent = new Intent(context, DetailActivity.class);
 				intent.putExtra(INTENT_KEY, key);
-				intent.putExtra(MainActivity.INTENT_RECORD_EDITED, adapterHelper.getRecordsBase().get(position));
+				intent.putExtra(MainActivity.INTENT_RECORD_EDITED, adapterHelper.getRecords().get(position));
 				context.startActivityForResult(intent, MainActivity.REQUEST_CODE_DETAIL);
 			}
 			
@@ -642,6 +642,9 @@ public class MainActivity extends Activity {
 			return records_base;
 		}
 		private List<Record> records;
+		public List<Record> getRecords(){
+			return records;
+		}
 		private List<Map<String, Object>> recordMapList;
 		private MainActivity context;
 	}
