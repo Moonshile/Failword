@@ -33,6 +33,7 @@
     <string name="main_change_ok">更改成功，请重新进入应用</string>
     <string name="main_change_error">出现错误，可重试</string>
     <string name="grid_item_image_desc">图标</string>
+    <string name="plus">+</string>
     <string name="edit_activity_title">编辑</string>
     <string name="edit_tag_hint">标签，如QQ</string>
     <string name="edit_username_hint">用户名，如123456</string>

@@ -7,8 +7,7 @@
     <item
         android:id="@+id/main_action_add_record"
         android:orderInCategory="100"
-        android:title="@string/main_action_add_record"
-        android:icon="@drawable/add"
+        android:title="@string/plus"
         android:showAsAction="always"/>
     
     <item

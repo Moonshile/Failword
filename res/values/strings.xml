@@ -33,6 +33,7 @@
     <string name="main_change_ok">Success! Resign in please</string>
     <string name="main_change_error">Error occurred, try again?</string>
     <string name="grid_item_image_desc">logo of app</string>
+    <string name="plus">+</string>
     <string name="edit_activity_title">Edit Record</string>
     <string name="edit_tag_hint">Tag, such as Google</string>
     <string name="edit_username_hint">Username, such as abc@gmail.com</string>
