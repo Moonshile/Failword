@@ -72,7 +72,7 @@ public class ChangeKeyActivity extends Activity {
 			String new_key_str = ((EditText)findViewById(R.id.change_new_pwd)).getText().toString();
 			String new_key_str_cfm = ((EditText)findViewById(R.id.change_new_pwd_cfm)).getText().toString();
 			final byte[] new_key = AESHelper.getKeyBytes(new_key_str);
-			if(areEqual(old_key, old_key_input) && new_key_str.equals(new_key_str_cfm)){
+			if(AESHelper.keyAreEqual(old_key, old_key_input) && new_key_str.equals(new_key_str_cfm)){
 				Handler handler = new Handler();
 				handler.post(new Runnable(){
 
@@ -106,7 +106,7 @@ public class ChangeKeyActivity extends Activity {
 					
 				});
 			}else{
-				if(!areEqual(old_key, old_key_input)){
+				if(!AESHelper.keyAreEqual(old_key, old_key_input)){
 					((TextView)findViewById(R.id.change_tips)).setText(R.string.change_wrong_old_key);
 				}else{
 					((TextView)findViewById(R.id.change_tips)).setText(R.string.change_dif_new_keys);
@@ -120,18 +120,6 @@ public class ChangeKeyActivity extends Activity {
 			onCancel(null);
 			e.printStackTrace();
 		}
-	}
-	
-	private boolean areEqual(byte[] b1, byte[] b2){
-		if(b1.length != b2.length){
-			return false;
-		}
-		for(int i = 0; i < b1.length; i++){
-			if(b1[i] != b2[i]){
-				return false;
-			}
-		}
-		return true;
 	}
 
 }

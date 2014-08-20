@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 	private ArrayAdapter<String> tagAdapter;
 	private final MainActivity context = this;
 	private Handler dataHandler; // for handling import or export of data
+	private boolean onResumeLock = false; // whether lock the screen while onResume or not
 
 	private static final String RECORD_ID = "RECORD_ID";
 	private static final String RECORD_TAG = "RECORD_TAG";
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
 	public static final int REQUEST_CODE_EDIT = 0;
 	public static final int REQUEST_CODE_DETAIL = 1;
 	public static final int REQUEST_CODE_CHANGE = 2;
+	public static final int REQUEST_CODE_LOCK = 3;
 	
 	public static final int IMPORTING_INC = 1;
 	
@@ -195,6 +197,17 @@ public class MainActivity extends Activity {
 			onImport(path);
 		}
 	}
+	
+	@Override
+	public void onResume(){
+		super.onPause();
+		if(onResumeLock){
+			Intent intent = new Intent(this, LockActivity.class);
+			intent.putExtra(INTENT_KEY, key);
+			this.startActivityForResult(intent, MainActivity.REQUEST_CODE_LOCK);
+		}
+		onResumeLock = true;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -268,7 +281,17 @@ public class MainActivity extends Activity {
 				break;
 			}
 			break;
+		case REQUEST_CODE_LOCK:
+			switch(resultCode){
+			case LockActivity.RESULT_OK:
+				break;
+			case LockActivity.RESULT_CANCELED:
+				this.finish();
+				break;
+			}
+			break;
 		}
+		onResumeLock = false;
 	}
 	
 
