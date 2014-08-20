@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.PRNGFixes;
 import com.moonshile.storage.Record;
+import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 public class LoadingActivity extends Activity {
 	
@@ -45,6 +46,7 @@ public class LoadingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		XiaomiUpdateAgent.update(this);
 		getActionBar().hide();
 		setContentView(R.layout.activity_loading);
 		sharedPref = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

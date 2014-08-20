@@ -2,7 +2,8 @@
 <resources>
     <string-array name="loading_tips">
         <item>Global key is for pwd-protection. Never forget it!</item>
-        <item>Failword will never access Internet.</item>
+        <item>Failword will never access Internet for its function.</item>
+        <item>Only when check for update will Failword request for Internet.</item>
         <item>All your inputs are encrypted, with AES-256.</item>
     </string-array>
 </resources>
