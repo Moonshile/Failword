@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -78,6 +79,9 @@ public class LoadingActivity extends Activity {
 		}else{
 			// if this app is used first time
 			tips.setText(tipStrs[0]);
+			TextView agree = (TextView)findViewById(R.id.loading_agreement);
+			agree.setVisibility(View.VISIBLE);
+			agree.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 		String last_signing = sharedPref.getString(LAST_SIGNING, null);
 		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
