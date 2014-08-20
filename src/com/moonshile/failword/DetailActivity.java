@@ -67,7 +67,6 @@ public class DetailActivity extends Activity {
 				switch(e.getAction()){
 				case MotionEvent.ACTION_DOWN:
 					try {
-						((TextView)findViewById(R.id.detail_username_content)).setText(record.getUsername(key));
 						((TextView)findViewById(R.id.detail_password_content)).setText(record.getPassword(key));
 						((TextView)findViewById(R.id.detail_remarks_content)).setText(record.getRemarks(key));
 					} catch (Exception e1) {
@@ -79,7 +78,6 @@ public class DetailActivity extends Activity {
 					break;
 				case MotionEvent.ACTION_UP:
 					String hidden = getResources().getString(R.string.detail_hidden);
-					((TextView)findViewById(R.id.detail_username_content)).setText(hidden);
 					((TextView)findViewById(R.id.detail_password_content)).setText(hidden);
 					((TextView)findViewById(R.id.detail_remarks_content)).setText(hidden);
 					break;
@@ -137,8 +135,8 @@ public class DetailActivity extends Activity {
 	private void setTextView(){
 		try {
 			((TextView)findViewById(R.id.detail_tag_content)).setText(record.getTag(key));
+			((TextView)findViewById(R.id.detail_username_content)).setText(record.getUsername(key));
 			String hidden = getResources().getString(R.string.detail_hidden);
-			((TextView)findViewById(R.id.detail_username_content)).setText(hidden);
 			((TextView)findViewById(R.id.detail_password_content)).setText(hidden);
 			((TextView)findViewById(R.id.detail_remarks_content)).setText(hidden);
 		} catch (Exception e) {
