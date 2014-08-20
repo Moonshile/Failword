@@ -385,7 +385,7 @@ public class Record implements Serializable {
 			File[] files = f.listFiles();
 			f = new File(path + "/0000");
 			for(File file: files){
-				if(file.getCanonicalPath().compareTo(f.getCanonicalPath()) > 0){
+				if(file.getName().matches("^\\d{14}.failword$") && file.getName().compareTo(f.getName()) > 0){
 					f = file;
 				}
 			}
