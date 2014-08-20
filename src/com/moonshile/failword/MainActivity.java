@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
 	public static final int REQUEST_CODE_DETAIL = 1;
 	public static final int REQUEST_CODE_CHANGE = 2;
 	public static final int REQUEST_CODE_LOCK = 3;
+	public static final int REQUEST_CODE_ABOUT = 4;
 	
 	public static final int IMPORTING_INC = 1;
 	
@@ -291,6 +292,11 @@ public class MainActivity extends Activity {
 			}
 			break;
 		}
+		switch(requestCode){
+		case REQUEST_CODE_ABOUT:
+			onResumeLock = false;
+			return;
+		}
 		onResumeLock = resultCode == LockActivity.RESULT_LOCK ? true : false;
 	}
 	
@@ -321,7 +327,7 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.main_action_about:
 			Intent intentAbout = new Intent(this, AboutActivity.class);
-			this.startActivity(intentAbout);
+			this.startActivityForResult(intentAbout, REQUEST_CODE_ABOUT);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
