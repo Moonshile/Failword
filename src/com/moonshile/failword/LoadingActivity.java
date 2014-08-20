@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -46,7 +47,12 @@ public class LoadingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		XiaomiUpdateAgent.update(this);
+		try{
+			XiaomiUpdateAgent.update(this);
+		}catch(Exception e){
+			e.printStackTrace();
+			Log.w("xiaomi", e.toString());
+		}
 		getActionBar().hide();
 		setContentView(R.layout.activity_loading);
 		sharedPref = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
