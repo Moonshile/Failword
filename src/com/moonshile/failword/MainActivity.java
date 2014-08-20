@@ -291,7 +291,7 @@ public class MainActivity extends Activity {
 			}
 			break;
 		}
-		onResumeLock = false;
+		onResumeLock = resultCode == LockActivity.RESULT_LOCK ? true : false;
 	}
 	
 

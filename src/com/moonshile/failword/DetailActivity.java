@@ -23,6 +23,7 @@ public class DetailActivity extends Activity {
 	
 	private byte[] key;
 	private Record record;
+	private boolean onPauseLock = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,14 @@ public class DetailActivity extends Activity {
 		});
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		if(onPauseLock){
+			LockActivity.ActivityResultLock(this);
+		}
+	}
+	
 	public void onBack(View view){
 		Intent res = getIntent();
 		res.putExtra(MainActivity.INTENT_RECORD_EDITED, record);
@@ -100,6 +109,7 @@ public class DetailActivity extends Activity {
 	}
 	
 	public void onEdit(View view){
+		onPauseLock = false;
 		Intent intent = new Intent(this, EditActivity.class);
 		intent.putExtra(MainActivity.INTENT_KEY, key);
 		intent.putExtra(MainActivity.INTENT_RECORD_EDITED, record);
@@ -129,6 +139,10 @@ public class DetailActivity extends Activity {
 				break;
 			}
 			break;
+		}
+		onPauseLock = true;
+		if(resultCode == LockActivity.RESULT_LOCK){
+			this.onPause();
 		}
 	}
 	

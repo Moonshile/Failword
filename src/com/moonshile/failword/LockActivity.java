@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 public class LockActivity extends Activity {
 	
+	public static final int RESULT_LOCK = 100;
+	
 	private byte[] key;
 	private int wrong = 2;
 
@@ -64,5 +66,15 @@ public class LockActivity extends Activity {
 		Intent res = getIntent();
 		this.setResult(RESULT_CANCELED, res);
 		this.finish();
+	}
+	
+	/**
+	 * if an activity need to return to main board and lock the screen, 
+	 * then call this method
+	 */
+	public static void ActivityResultLock(Activity context){
+		Intent res = context.getIntent();
+		context.setResult(RESULT_LOCK, res);
+		context.finish();
 	}
 }

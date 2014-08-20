@@ -55,6 +55,12 @@ public class EditActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		LockActivity.ActivityResultLock(this);
+	}
+	
 	public void onCancel(View view){
 		Intent res = getIntent();
 		this.setResult(RESULT_CANCELED, res);

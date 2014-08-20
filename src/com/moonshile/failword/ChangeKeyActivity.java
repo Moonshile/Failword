@@ -42,6 +42,12 @@ public class ChangeKeyActivity extends Activity {
 	}
 	
 	@Override
+	public void onPause(){
+		super.onPause();
+		LockActivity.ActivityResultLock(this);
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		if(item.getItemId() == android.R.id.home){
 			onCancel(null);
