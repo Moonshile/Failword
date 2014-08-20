@@ -5,6 +5,7 @@
         android:right="@dimen/view_padding"
         android:top="@dimen/small_view_padding"
         android:bottom="@dimen/small_view_padding" />
+    <solid android:color="@color/xlight_blue" />
     <stroke android:width="@dimen/small_view_stroke"
         android:color="@color/dark_red" />
     
