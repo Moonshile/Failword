@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
 	public static final int REQUEST_CODE_ABOUT = 4;
 	
 	public static final int IMPORTING_INC = 1;
+	public static final int MERGING_INC = 20;
 	
 	
 	@SuppressLint("HandlerLeak")
@@ -165,7 +166,7 @@ public class MainActivity extends Activity {
 					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_MERGE_COUNT));
 					break;
 				case MessageTypes.MSG_MERGED_COUNT:
-					c += IMPORTING_INC;
+					c += MERGING_INC;
 					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_merging) + 
 							c + "/" + total);
 					break;
@@ -385,7 +386,7 @@ public class MainActivity extends Activity {
 					for(int i = 0; i < toRm.size(); i++){
 						Record r = toRm.get(i);
 						adapterHelper.delete(r);
-						if(i % IMPORTING_INC == 0){
+						if((i + 1) % MERGING_INC == 0){
 							MessageTypes.sendMessage(MessageTypes.MSG_MERGED_COUNT, null, null, dataHandler);
 						}
 					}
