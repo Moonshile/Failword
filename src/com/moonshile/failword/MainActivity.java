@@ -158,8 +158,8 @@ public class MainActivity extends Activity {
 				case MessageTypes.MSG_IMPORT_FINISH:
 					total = -1;
 					c = 0;
-					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_merging) + 
-							c + "/" + context.getResources().getString(R.string.main_import_progress_count_unknown));
+					barHint.setText(context.getResources().getString(
+							R.string.main_import_progress_text_merging).replace(":", "...").replace("：", "..."));
 					break;
 				case MessageTypes.MSG_MERGE_START:
 					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_MERGE_COUNT));
