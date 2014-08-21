@@ -57,7 +57,7 @@
     <string name="change_wrong_old_key">旧密钥错误</string>
     <string name="change_dif_new_keys">新密钥不一致</string>
     <string name="about_activity_title">关于</string>
-    <string name="about_author">本应用作者为Moonshile， 请访问moonshile.com。 任何建议请发送给moonshile@foxmail.com</string>
+    <string name="about_author">本应用作者为Moonshile， 请访问moonshile.com。 任何建议请发送给moonshile@163.com</string>
     <string name="about_app">本应用是开源的，你可以在https://github.com/Moonshile/Failword查看源码。 更多的必要知道的信息， 请查看源码包中的Readme文件。</string>
 	<string name="lock_activity_title">锁定中</string>
     <string name="lock_wrong_key">密钥错误！可重试次数： </string>
