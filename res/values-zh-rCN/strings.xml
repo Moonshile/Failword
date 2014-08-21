@@ -14,7 +14,7 @@
     <string name="loading_wrong_key_tip">错误的密钥！</string>
     <string name="loading_forbidden">今天多次输入错误，明天再试试吧&#8230;</string>
     <string name="loading_exception_tip">发生异常了！请尝试重启应用&#8230;</string>
-    <string name="loading_agreement">使用即同意<a href="http://www.moonshile.com/post/product/failword-agreement">用户协议</a></string>
+    <string name="loading_agreement">使用即同意<a href="http://failword.moonshile.com/post/failword-agreement">用户协议</a></string>
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">根据标签搜索</string>
     <string name="main_action_add_record">添加</string>
