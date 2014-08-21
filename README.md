@@ -14,7 +14,7 @@ Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
 To sign in, you need a **GLOBAL KEY**, which is set the first time you sign in. 
 You must NOT forget your global key or you will loose all you data, for *Failword* 
 will NOT save it. In addition, your use of *Failword* means that you agree the 
-[AGREEMENT](http://www.moonshile.com/post/product/failword-agreement).
+[AGREEMENT](http://failword.moonshile.com/post/failword-agreement).
 
 
 * Edit Page
