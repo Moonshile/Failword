@@ -2,6 +2,7 @@ package com.moonshile.failword;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +158,8 @@ public class MainActivity extends Activity {
 				case MessageTypes.MSG_IMPORT_FINISH:
 					total = -1;
 					c = 0;
+					barHint.setText(context.getResources().getString(R.string.main_import_progress_text_merging) + 
+							c + "/" + context.getResources().getString(R.string.main_import_progress_count_unknown));
 					break;
 				case MessageTypes.MSG_MERGE_START:
 					total = Integer.parseInt(msg.getData().getString(MessageTypes.MSG_DATA_MERGE_COUNT));
@@ -322,7 +325,7 @@ public class MainActivity extends Activity {
 		case R.id.main_action_change_key:
 			Intent intentChange = new Intent(this, ChangeKeyActivity.class);
 			intentChange.putExtra(INTENT_KEY, key);
-			intentChange.putExtra(INTENT_RECORDS, (ArrayList<Record>)adapterHelper.getRecordsBase());
+			intentChange.putExtra(INTENT_RECORDS, new ArrayList<Record>(adapterHelper.getRecordsBase()));
 			this.startActivityForResult(intentChange, REQUEST_CODE_CHANGE);
 			break;
 		case R.id.main_action_about:
@@ -373,8 +376,8 @@ public class MainActivity extends Activity {
 							MessageTypes.sendMessage(MessageTypes.MSG_IMPORTED_COUNT, null, null, dataHandler);
 						}
 					}
-					adapterHelper.sortAllRecords();
 					MessageTypes.sendMessage(MessageTypes.MSG_IMPORT_FINISH, null, null, dataHandler);
+					
 					List<Record> toRm = Record.mergeRecords(adapterHelper.getRecordsBase(), context);
 					MessageTypes.sendMessage(MessageTypes.MSG_MERGE_START, 
 							new String[]{MessageTypes.MSG_DATA_MERGE_COUNT}, 
@@ -450,13 +453,10 @@ public class MainActivity extends Activity {
 
 		public MainGridAdapterHelper(List<Record> base, MainActivity context){
 			this.context = context;
-			records_base = base;
-			records = new ArrayList<Record>();
-			records.addAll(base);
+			records_base = new LinkedList<Record>(base);
+			records = new LinkedList<Record>(base);
 			recordMapList = convertRecordsToMapList(records);
-			sortRecords(records_base);
-			sortRecords(records);
-			sortRecordMapList(recordMapList);
+			sortAllRecords();
 		}
 		
 		/********************************** Methods ********************************************/
@@ -530,9 +530,7 @@ public class MainActivity extends Activity {
 				records.set(records_index, r);
 				recordMapList.set(records_index, this.convertRecordsToMap(r));
 				if(sort){
-					sortRecords(records_base);
-					sortRecords(records);
-					sortRecordMapList(recordMapList);
+					sortAllRecords();
 				}
 				return true;
 			}
@@ -543,14 +541,28 @@ public class MainActivity extends Activity {
 		 * insert a record into both records-list and map-list (after convertion)
 		 */
 		private void insertIntoRecords(Record r, boolean sort){
-			records_base.add(r);
-			records.add(r);
-			recordMapList.add(this.convertRecordsToMap(r));
-			if(sort){
-				sortRecords(records_base);
-				sortRecords(records);
-				sortRecordMapList(recordMapList);
+			records_base.add(findInsertIndex(records_base, r), r);
+			int index = findInsertIndex(records, r);
+			records.add(index, r);
+			recordMapList.add(index, this.convertRecordsToMap(r));
+		}
+		
+		private int findInsertIndex(List<Record> rs, Record r){
+			RecordCmp recordCmp = new RecordCmp();
+			int start = 0;
+			int end = rs.size() - 1;
+			if(start > end){
+				return 0;
 			}
+			while(start != end){
+				int mid = (start + end)/2;
+				if(recordCmp.cmp(r, rs.get(mid)) < 0){
+					end = mid;
+				}else{
+					start = mid + 1;
+				}
+			}
+			return recordCmp.cmp(r, rs.get(start)) < 0 ? start : start + 1;
 		}
 		
 		/**
@@ -563,7 +575,7 @@ public class MainActivity extends Activity {
 		}
 
 		private List<Map<String, Object>> convertRecordsToMapList(List<Record> rs){
-			List<Map<String, Object>> rml = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> rml = new LinkedList<Map<String, Object>>();
 			for(Record r: rs){
 				rml.add(this.convertRecordsToMap(r));
 			}
@@ -603,32 +615,7 @@ public class MainActivity extends Activity {
 					list.set(i, f);
 				}
 				
-			}, rs, 0, rs.size() - 1, new MoonshileSort.Compare<Record>(){
-
-				@Override
-				public int cmp(Record f1, Record f2) {
-					int res;
-					try {
-						res = AppIcon.getStandardName(f1.getTag(key)).compareTo(AppIcon.getStandardName(f2.getTag(key)));
-						if(res != 0){
-							return res;
-						}else{
-							// if their standard names are same, then use their true names
-							res = f1.getTag(key).compareTo(f2.getTag(key));
-							if(res != 0){
-								return res;
-							}
-							return f1.getUsername(key).compareTo(f2.getUsername(key));
-						}
-					} catch (Exception e) {
-						Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
-						e.printStackTrace();
-						context.finish();
-					}
-					return -1;
-				}
-				
-			});
+			}, rs, 0, rs.size() - 1, new RecordCmp());
 		}
 
 		
@@ -645,25 +632,56 @@ public class MainActivity extends Activity {
 						Map<String, Object> f, int i) {
 					list.set(i, f);
 				}
-			}, mapList, 0, mapList.size() - 1, new MoonshileSort.Compare<Map<String, Object>>() {
+			}, mapList, 0, mapList.size() - 1, new MapCmp());
+		}
+		
+		private class RecordCmp implements MoonshileSort.Compare<Record>{
 
-				@Override
-				public int cmp(Map<String, Object> f1, Map<String, Object> f2) {
-					int res;
-					res = AppIcon.getStandardName((String)f1.get(RECORD_TAG)).compareTo(AppIcon.getStandardName((String)f2.get(RECORD_TAG)));
+			@Override
+			public int cmp(Record f1, Record f2) {
+				int res;
+				try {
+					res = AppIcon.getStandardName(f1.getTag(key)).compareToIgnoreCase(AppIcon.getStandardName(f2.getTag(key)));
 					if(res != 0){
 						return res;
 					}else{
 						// if their standard names are same, then use their true names
-						res = ((String)f1.get(RECORD_TAG)).compareTo((String)f2.get(RECORD_TAG));
+						res = f1.getTag(key).compareToIgnoreCase(f2.getTag(key));
 						if(res != 0){
 							return res;
 						}
-						return ((String)f1.get(RECORD_USERNAME)).compareTo((String)f2.get(RECORD_USERNAME));
+						return f1.getUsername(key).compareToIgnoreCase(f2.getUsername(key));
 					}
+				} catch (Exception e) {
+					Toast.makeText(context, R.string.error_hint, Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+					context.finish();
 				}
-			});
+				return -1;
+			}
+			
 		}
+		
+		private class MapCmp implements MoonshileSort.Compare<Map<String, Object>>{
+
+			@Override
+			public int cmp(Map<String, Object> f1, Map<String, Object> f2) {
+				int res;
+				res = AppIcon.getStandardName((String)f1.get(RECORD_TAG)).compareToIgnoreCase(AppIcon.getStandardName((String)f2.get(RECORD_TAG)));
+				if(res != 0){
+					return res;
+				}else{
+					// if their standard names are same, then use their true names
+					res = ((String)f1.get(RECORD_TAG)).compareToIgnoreCase((String)f2.get(RECORD_TAG));
+					if(res != 0){
+						return res;
+					}
+					return ((String)f1.get(RECORD_USERNAME)).compareToIgnoreCase((String)f2.get(RECORD_USERNAME));
+				}
+			}
+			
+		}
+		
 		/********************************** Fields ********************************************/
 
 		private List<Record> records_base;
