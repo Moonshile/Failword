@@ -302,11 +302,6 @@ public class MainActivity extends Activity {
 			}
 			break;
 		}
-		switch(requestCode){
-		case REQUEST_CODE_ABOUT:
-			onResumeLock = false;
-			return;
-		}
 		onResumeLock = resultCode == LockActivity.RESULT_LOCK ? true : false;
 	}
 	
