@@ -24,4 +24,10 @@ public class AboutActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@Override
+	public void onPause(){
+		super.onPause();
+		LockActivity.ActivityResultLock(this);
+	}
+	
 }

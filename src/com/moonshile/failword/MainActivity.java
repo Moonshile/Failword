@@ -197,21 +197,27 @@ public class MainActivity extends Activity {
 		};
 
 		// if open a exported file with failword
-		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
-		if(path != null){
-			onImport(path);
-		}
+		importFromOpenFile(intent);
 	}
 	
 	@Override
 	public void onResume(){
-		super.onPause();
+		super.onResume();
+		
+		// lock screen if app is paused
 		if(onResumeLock){
-			Intent intent = new Intent(this, LockActivity.class);
-			intent.putExtra(INTENT_KEY, key);
-			this.startActivityForResult(intent, MainActivity.REQUEST_CODE_LOCK);
+			Intent lock = new Intent(this, LockActivity.class);
+			lock.putExtra(INTENT_KEY, key);
+			this.startActivityForResult(lock, MainActivity.REQUEST_CODE_LOCK);
 		}
 		onResumeLock = true;
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent){
+		super.onNewIntent(intent);
+		// if open a exported file with failword
+		importFromOpenFile(intent);
 	}
 
 	@Override
@@ -296,11 +302,6 @@ public class MainActivity extends Activity {
 			}
 			break;
 		}
-		switch(requestCode){
-		case REQUEST_CODE_ABOUT:
-			onResumeLock = false;
-			return;
-		}
 		onResumeLock = resultCode == LockActivity.RESULT_LOCK ? true : false;
 	}
 	
@@ -335,6 +336,16 @@ public class MainActivity extends Activity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void importFromOpenFile(Intent intent){
+		// if open a exported file with failword
+		String path = intent.getStringExtra(LoadingActivity.INTENT_IMPORT_PATH);
+		if(path != null){
+			onImport(path);
+			intent.removeExtra(LoadingActivity.INTENT_IMPORT_PATH);
+			onResumeLock = false;
+		}
 	}
 	
 	private void onExport(){
