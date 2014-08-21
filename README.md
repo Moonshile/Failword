@@ -22,7 +22,7 @@ will NOT save it. In addition, your use of *Failword* means that you agree the
 ![Edit Page](https://raw.githubusercontent.com/Moonshile/Failword/master/shortcuts/2.png)
 
 *Edit page* is for addition or update of records. This page is opened by clicking 
-"add button" in the right top corner of *Main Page*. All inputs in this page could
+*ADD* button in the right top corner of *Main Page*. All inputs in this page could
 be blank.
 
 * Main Page
