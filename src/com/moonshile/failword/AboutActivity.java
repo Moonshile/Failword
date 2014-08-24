@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.failword;
 
 import android.app.ActionBar;
@@ -22,6 +28,12 @@ public class AboutActivity extends Activity {
 			this.finish();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		LockActivity.ActivityResultLock(this);
 	}
 	
 }

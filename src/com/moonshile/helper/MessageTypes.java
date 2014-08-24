@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.helper;
 
 import android.os.Bundle;

@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.failword;
 
 import java.text.SimpleDateFormat;
@@ -51,13 +57,23 @@ public class LoadingActivity extends Activity {
 		sharedPref = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		
 		Intent intent = getIntent();
+		setImportPath(intent);
+		
+		// fix bugs of PRNG while using AES
+		PRNGFixes.apply();
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent){
+		super.onNewIntent(intent);
+		setImportPath(intent);
+	}
+	
+	private void setImportPath(Intent intent){
 		Uri uri = intent.getData();
 		if(uri != null){
 			import_path = uri.toString().replace(uri.getScheme() + "://", "");
 		}
-		
-		// fix bugs of PRNG while using AES
-		PRNGFixes.apply();
 	}
 	
 	@SuppressLint("SimpleDateFormat")
