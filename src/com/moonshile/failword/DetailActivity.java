@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.failword;
 
 import com.moonshile.storage.Record;
@@ -23,6 +29,7 @@ public class DetailActivity extends Activity {
 	
 	private byte[] key;
 	private Record record;
+	private boolean onPauseLock = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,6 @@ public class DetailActivity extends Activity {
 				switch(e.getAction()){
 				case MotionEvent.ACTION_DOWN:
 					try {
-						((TextView)findViewById(R.id.detail_username_content)).setText(record.getUsername(key));
 						((TextView)findViewById(R.id.detail_password_content)).setText(record.getPassword(key));
 						((TextView)findViewById(R.id.detail_remarks_content)).setText(record.getRemarks(key));
 					} catch (Exception e1) {
@@ -79,7 +85,6 @@ public class DetailActivity extends Activity {
 					break;
 				case MotionEvent.ACTION_UP:
 					String hidden = getResources().getString(R.string.detail_hidden);
-					((TextView)findViewById(R.id.detail_username_content)).setText(hidden);
 					((TextView)findViewById(R.id.detail_password_content)).setText(hidden);
 					((TextView)findViewById(R.id.detail_remarks_content)).setText(hidden);
 					break;
@@ -88,6 +93,14 @@ public class DetailActivity extends Activity {
 			}
 			
 		});
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		if(onPauseLock){
+			LockActivity.ActivityResultLock(this);
+		}
 	}
 	
 	public void onBack(View view){
@@ -102,6 +115,7 @@ public class DetailActivity extends Activity {
 	}
 	
 	public void onEdit(View view){
+		onPauseLock = false;
 		Intent intent = new Intent(this, EditActivity.class);
 		intent.putExtra(MainActivity.INTENT_KEY, key);
 		intent.putExtra(MainActivity.INTENT_RECORD_EDITED, record);
@@ -132,13 +146,17 @@ public class DetailActivity extends Activity {
 			}
 			break;
 		}
+		onPauseLock = true;
+		if(resultCode == LockActivity.RESULT_LOCK){
+			this.onPause();
+		}
 	}
 	
 	private void setTextView(){
 		try {
 			((TextView)findViewById(R.id.detail_tag_content)).setText(record.getTag(key));
+			((TextView)findViewById(R.id.detail_username_content)).setText(record.getUsername(key));
 			String hidden = getResources().getString(R.string.detail_hidden);
-			((TextView)findViewById(R.id.detail_username_content)).setText(hidden);
 			((TextView)findViewById(R.id.detail_password_content)).setText(hidden);
 			((TextView)findViewById(R.id.detail_remarks_content)).setText(hidden);
 		} catch (Exception e) {

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright (C) 2014  Moonshile (moonshile@foxmail.com) -->
+
+
 <resources>
 
     <string name="app_name">Failword</string>
@@ -14,7 +18,7 @@
     <string name="loading_wrong_key_tip">错误的密钥！</string>
     <string name="loading_forbidden">今天多次输入错误，明天再试试吧&#8230;</string>
     <string name="loading_exception_tip">发生异常了！请尝试重启应用&#8230;</string>
-    <string name="loading_agreement">使用即同意<a href="http://www.moonshile.com/post/product/failword-agreement">用户协议</a></string>
+    <string name="loading_agreement">使用即同意<a href="http://failword.moonshile.com/post/failword-agreement">用户协议</a></string>
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">根据标签搜索</string>
     <string name="main_action_add_record">添加</string>
@@ -57,7 +61,9 @@
     <string name="change_wrong_old_key">旧密钥错误</string>
     <string name="change_dif_new_keys">新密钥不一致</string>
     <string name="about_activity_title">关于</string>
-    <string name="about_author">本应用作者为Moonshile， 请访问moonshile.com。 任何建议请发送给moonshile@foxmail.com</string>
+    <string name="about_author">本应用作者为Moonshile， 请访问moonshile.com。 任何建议请发送给moonshile@163.com</string>
     <string name="about_app">本应用是开源的，你可以在https://github.com/Moonshile/Failword查看源码。 更多的必要知道的信息， 请查看源码包中的Readme文件。</string>
-
+	<string name="lock_activity_title">锁定中</string>
+    <string name="lock_wrong_key">密钥错误！可重试次数： </string>
+    
 </resources>

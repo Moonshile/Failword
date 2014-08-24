@@ -9,6 +9,7 @@
     <color name="purple_shadow">#ffcc66</color>
     <color name="xdark_gray">#333333</color>
     <color name="xdark_gray_opacity">#88333333</color>
+    <color name="xxdark_gray_opacity">#bb333333</color>
     <color name="dark_gray">#555555</color>
     <color name="gray">#888888</color>
     <color name="light_gray">#aaaaaa</color>

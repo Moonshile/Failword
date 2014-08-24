@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.failword;
 
 
@@ -53,6 +59,12 @@ public class EditActivity extends Activity {
 			onCancel(null);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		LockActivity.ActivityResultLock(this);
 	}
 	
 	public void onCancel(View view){

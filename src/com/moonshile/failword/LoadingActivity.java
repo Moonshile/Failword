@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 package com.moonshile.failword;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moonshile.helper.AESHelper;
 import com.moonshile.helper.PRNGFixes;
@@ -58,13 +65,23 @@ public class LoadingActivity extends Activity {
 		sharedPref = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		
 		Intent intent = getIntent();
+		setImportPath(intent);
+		
+		// fix bugs of PRNG while using AES
+		PRNGFixes.apply();
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent){
+		super.onNewIntent(intent);
+		setImportPath(intent);
+	}
+	
+	private void setImportPath(Intent intent){
 		Uri uri = intent.getData();
 		if(uri != null){
 			import_path = uri.toString().replace(uri.getScheme() + "://", "");
 		}
-		
-		// fix bugs of PRNG while using AES
-		PRNGFixes.apply();
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -124,7 +141,8 @@ public class LoadingActivity extends Activity {
 			
 			private void wrongKey(){
 				SharedPreferences.Editor editor = sharedPref.edit();
-				editor.putInt(ERROR_COUNT, sharedPref.getInt(ERROR_COUNT, 0) + 1);
+				int errorCount = sharedPref.getInt(ERROR_COUNT, 0) + 1;
+				editor.putInt(ERROR_COUNT, errorCount);
 				editor.commit();
 				
 				((EditText)findViewById(R.id.loading_password)).setText("");
@@ -135,9 +153,12 @@ public class LoadingActivity extends Activity {
 
 				Button button = ((Button)findViewById(R.id.loading_login));
 				button.setText(R.string.loading_login);
-				button.setTextColor(getResources().getColor(sharedPref.getInt(ERROR_COUNT, 0) >= 3 ? 
+				button.setTextColor(getResources().getColor(errorCount >= 3 ? 
 						R.color.gray : R.color.black));
-				button.setClickable(true);
+				button.setClickable(errorCount >= 3 ? false : true);
+
+				Toast.makeText(context, getResources().getString(R.string.lock_wrong_key) + 
+						(3 - errorCount), Toast.LENGTH_SHORT).show();
 			}
 			
 			private void exception(){

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright (C) 2014  Moonshile (moonshile@foxmail.com) -->
+
+
 <resources>
 
     <string name="app_name">Failword</string>
@@ -14,7 +18,7 @@
     <string name="loading_wrong_key_tip">Wrong global key!</string>
     <string name="loading_forbidden">Input wrong key too many times, try again tomorrow&#8230;</string>
     <string name="loading_exception_tip">Exception occurred! Restart please&#8230;</string>
-    <string name="loading_agreement">Use Means <a href="http://www.moonshile.com/post/product/failword-agreement">AGREEMENT</a></string>
+    <string name="loading_agreement">Use Means <a href="http://failword.moonshile.com/post/failword-agreement">AGREEMENT</a></string>
     <string name="main_activity_title">Failword</string>
     <string name="main_search_hint">Search by tag</string>
     <string name="main_action_add_record">Add Record</string>
@@ -57,7 +61,9 @@
     <string name="change_wrong_old_key">Wrong old key</string>
     <string name="change_dif_new_keys">New keys are different</string>
     <string name="about_activity_title">About</string>
-    <string name="about_author">This app is authored by Moonshile, please visit moonshile.com. Any advice, Email to moonshile@foxmail.com</string>
+    <string name="about_author">This app is authored by Moonshile, please visit moonshile.com. Any advice, Email to moonshile@163.com</string>
     <string name="about_app">This app is an OSS, you can clone it on https://github.com/Moonshile/Failword. For more information, see Readme file in the source package.</string>
+    <string name="lock_activity_title">Lock</string>
+    <string name="lock_wrong_key">Wrong key! Remained times to retry: </string>
 
 </resources>

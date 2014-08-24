@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 /**
  * @Title AppIcon.java
  * @Package com.moonshile.helper
@@ -99,7 +105,7 @@ public class AppIcon {
 			new String[]{"huawei", "华为"},
 			new String[]{"cnblogs", "bokeyuan", "博客园"},
 			new String[]{"xuexin", "chsi", "学信"},
-			new String[]{"mi", "xiaomi", "小米", "红米"},
+			new String[]{"xiaomi", "小米", "红米", "hongmi"},
 			new String[]{"shanbay", "shanbei", "扇贝"},
 			new String[]{"sina", "xinlang", "新浪"},
 			new String[]{"wangyi", "netease", "126", "163", "网易", "yeah"},

@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 /**
  * @Title AESHelper.java
  * @Package com.moonshile.helper
@@ -49,6 +55,22 @@ public class AESHelper {
     		k[16 + i] = k2[i];
     	}
     	return k;
+	}
+	
+
+	/**
+	 * compare if the given two keys are equal
+	 */
+	public static boolean keyAreEqual(byte[] b1, byte[] b2){
+		if(b1.length != b2.length){
+			return false;
+		}
+		for(int i = 0; i < b1.length; i++){
+			if(b1[i] != b2[i]){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
