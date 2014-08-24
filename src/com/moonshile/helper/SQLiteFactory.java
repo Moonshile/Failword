@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 /**
  * @Title SQLiteFactory.java
  * @Package com.moonshile.helper
@@ -6,6 +12,7 @@
  * @update 
  *
  */
+
 package com.moonshile.helper;
 
 import android.content.Context;

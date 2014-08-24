@@ -1,3 +1,9 @@
+/**********************************************
+ * 
+ * Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
+ *
+ **********************************************/
+
 /**
  * @Title Record.java
  * @Package com.moonshile.storage

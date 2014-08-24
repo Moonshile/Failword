@@ -14,7 +14,7 @@ Copyright (C) 2014  Moonshile (moonshile@foxmail.com)
 To sign in, you need a **GLOBAL KEY**, which is set the first time you sign in. 
 You must NOT forget your global key or you will loose all you data, for *Failword* 
 will NOT save it. In addition, your use of *Failword* means that you agree the 
-[AGREEMENT](http://www.moonshile.com/post/product/failword-agreement).
+[AGREEMENT](http://failword.moonshile.com/post/failword-agreement).
 
 
 * Edit Page
@@ -22,7 +22,7 @@ will NOT save it. In addition, your use of *Failword* means that you agree the
 ![Edit Page](https://raw.githubusercontent.com/Moonshile/Failword/master/shortcuts/2.png)
 
 *Edit page* is for addition or update of records. This page is opened by clicking 
-"add button" in the right top corner of *Main Page*. All inputs in this page could
+*ADD* button in the right top corner of *Main Page*. All inputs in this page could
 be blank.
 
 * Main Page
