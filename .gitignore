@@ -10,6 +10,7 @@
 
 # Generated files
 src/bin
+test/bin
 gen/
 
 # Gradle files
