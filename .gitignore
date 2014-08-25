@@ -63,3 +63,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+
+# Ignore useless files
+.settings
