@@ -1,0 +1,78 @@
+extends base
+block title
+	title= request.args.s or tags.join('+') or site.title
+block links
+	load('/template/css/fix.css')
+block content
+	.jumbotron
+		.container
+			.col-md-5.col-md-offset-1.bottom
+				h1 Failword
+				p 这就是传说中的账户保管神器
+				p
+					a.btn.btn-success.btn-lg.pull-right(role="button", href="#download") 立即获取
+			.col-md-5.col-md-offset-1
+				img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/product.png")
+	
+	.container.container-padding
+		p.subtitle 简约不简单
+		.row
+			.col-md-4
+				h4 应有尽有
+				p AES-256加密，安全， 可靠
+				p 账户信息，完善保存
+				p 搜索查询，即搜即得
+			.col-md-4
+				h4 干净清爽
+				p 无广告，无插件，不联网*
+				p 只给你想要看到的
+				p 小清新风格，一定合你口味
+				span.hint *部分平台上的版本，其更新SDK需联网
+			.col-md-4
+				h4 功能强大
+				p 加密备份，轻松换机
+				p 自动只能分类，一目了然
+				p 精心设计，拒绝窥视
+	
+	.stripe
+		.container.container-padding
+			p.subtitle 极致微体验
+			.row
+				.col-md-4
+					h4 自动分类
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/feature-1.jpg")
+					p 图标自动匹配，不需要你去选择哦~
+				.col-md-4
+					h4 拒绝窥视
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/feature-2.jpg")
+					p 微小的创意方便着你，安装后再试试删除按钮~
+				.col-md-4
+					h4 一键导入
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/feature-3.jpg")
+					p 最新备份一键导入，其他备份直接打开即可导入~
+	
+	#download.container.container-padding
+		p.subtitle 现在就获取
+		.row
+			.col-md-3
+				a(href="http://app.mi.com/detail/71491")
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/xiaomi.png")
+					p 小米
+			.col-md-3
+				a(href="http://www.wandoujia.com/apps/com.moonshile.failword")
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/wandoujia.png")
+					p 豌豆荚
+			.col-md-3
+				a(href="http://apk.hiapk.com/appinfo/com.moonshile.failword")
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/hiapk.png")
+					p 安卓市场
+			.col-md-3
+				a(href="http://zhushou.360.cn/detail/index/soft_id/1941088")
+					img(src="https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/360.png")
+					p 360手机助手
+		p.hint *系统要求：Android 4.1 以上；项目是个人公益运作，任何建议请发邮件至 &nbsp;
+			a(href="mailto:moonshile@163.com") moonshile@163.com
+			| ； 使用即表示同意 &nbsp
+			a(href="post/failword-agreement", target="_blank") 用户协议
+        p.hint *请务必权衡后再谨慎保存银行账户等敏感信息
+

@@ -1,0 +1,44 @@
+
+img {
+  max-width: 100%;
+}
+
+.entry-thumbnail {
+  float: left;
+  width: 200px;
+  max-height: 200px;
+  overflow: hidden;
+  margin: 5px 20px 0 0;
+  border: 3px solid #fff;
+}
+
+.entry-thumbnail:hover {
+  border: 3px solid #666;
+}
+
+.loop-post {
+  padding-bottom: 16px;
+  margin-bottom: 30px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.entry-meta {
+  color: #999;
+}
+
+.entry-meta span {
+  margin-right: 20px;
+}
+
+.entry-meta .count {
+float: right;
+}
+
+.post-intro {
+  margin-top: 5px;
+  line-height: 1.8;
+}
+
+.recent_posts {
+  border-bottom: 1px dashed gainsboro;
+}

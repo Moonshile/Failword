@@ -1,0 +1,19 @@
+extends base
+block title
+  title= request.args.s or tags.join('+') or site.title
+block links
+  load('/template/css/sidebar.css')
+  load('/template/css/docs.css')
+block navbar
+  li
+    a(href="/") 首页
+  li.active
+    a(href="#") 动态
+  li
+    a(href="/#download") 获取
+block content
+  {% from "include/macros.jade" import make_posts_list %}
+  .row
+    .primary.col-md-5.col-md-offset-2
+      +make_posts_list
+    include include/sider.html

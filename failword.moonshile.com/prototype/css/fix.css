@@ -1,0 +1,77 @@
+
+h4 {
+ margin-top: 12px;
+ margin-bottom: 12px;
+}
+
+.container-padding {
+  margin-top: 24px;
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+.subtitle {
+  font-size: 24px;
+  text-align: center;
+}
+
+.hint {
+  color: #888;
+  font-size: 10px;
+  margin-top: 32px;
+}
+
+.stripe {
+  background-color: #eee;
+}
+
+div.jumbotron {
+  background-color: #89b3df;
+  background-image: url('https://raw.githubusercontent.com/Moonshile/MoonshileImages/master/Site/failword/bg.png');
+  background-repeat: no-repeat;
+}
+
+div.jumbotron .container {
+  padding-left: 50px;
+}
+
+div.jumbotron .container div h1 {
+  font-family: snap, "Snap ITC";
+  color: #9933cc;
+}
+
+div.jumbotron .container div p {
+  padding-left: 50px;
+}
+
+div.jumbotron .container div p  a{
+  margin-top: 30px;
+  margin-left: 200px;
+}
+
+div.bottom {
+  padding-top: 180px;
+}
+
+div.col-md-4, div.col-md-3 {
+  text-align: center;
+}
+
+div.col-md-3 {
+  margin-top:16px;
+}
+
+.col-md-4 img, .col-md-3 img {
+  margin-bottom: 16px;
+}
+
+.col-md-4 p, .col-md-3 p {
+  color: #555;
+  font-size: 16px;
+}
+
+@font-face {
+ font-family:snap; 
+  src: url('../fonts/SNAP.eot');
+  src: url('../fonts/SNAP.ttf')  format('truetype');
+}
